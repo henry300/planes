@@ -50,10 +50,8 @@ def game_loop():
                     keyboard.right = False
                 if event.key == pygame.K_SPACE:
                     keyboard.space = False
-                    keyboard.fire = False
                 if event.key == pygame.K_c:
                     keyboard.c = False
-                    keyboard.fire = False
 
         # Render moving background
         background.blit()
@@ -66,14 +64,16 @@ def game_loop():
 
 
         """ FIRE FROM USER WEAPON WHEN NECCESSAŖY"""
-        if keyboard.fire:
+        if keyboard.space or keyboard.c:
             plane.fire(keyboard, stopwatch, bullets)
         """"""""""""""""""""""""""""""""""""""
 
 
-        # """ RENDER VISIBLE BULLETS"""
-        # bullets.blit()
-        # """"""""""""""""""""""""""""""
+        """ RENDER VISIBLE BULLETS"""
+        bullets.calc_pos()
+        bullets.remove_offscreen()
+        bullets.blit()
+        """"""""""""""""""""""""""""""
 
 
         # """ ENEMIES """
@@ -98,4 +98,3 @@ def game_loop():
 
 # Starts the main loop and resets all variables to default
 game_loop()
-
