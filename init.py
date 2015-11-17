@@ -3,9 +3,6 @@ from logic import *
 from Classes import *
 from math import *
 from random import *
-import pygame
-
-
 
 
 # Create main frame and caption for it
@@ -17,6 +14,14 @@ pygame.mouse.set_visible(mouse)
 
 # Create clock for the game
 clock = pygame.time.Clock()
+
+# Nuppude asendid
+down_arrow = False
+up_arrow = False
+left_arrow = False
+right_arrow = False
+space = False
+c_but = False
 
 # Create necessary objects
 # background = Background()

@@ -3,16 +3,15 @@
 Authors: Henry Teigar & Miron Storozev
 Tartu Ülikool 2015
 """
-
 from init import *
 pygame.init()
-
-
 
 
 def game_loop():
     pygame.event.clear()
 
+
+    """ INITIATE ALL GAME SPECIFIC VARIABLES AND OBJECTS """
     # Nuppude asendid
     down_arrow = False
     up_arrow = False
@@ -20,6 +19,16 @@ def game_loop():
     right_arrow = False
     space = False
     c_but = False
+
+    # Create necessary objects
+    background = Background(screen)
+    # print(Background.speeds)
+    # plane = Plane()
+    # enemies = Enemies()
+    # bullets = Bullets()
+    # missles = Missles()
+    stopwatch = Stopwatch()
+    """"""""""""""""""""""""""""""""""""""""""
 
     while True:
         for event in pygame.event.get():
@@ -53,7 +62,18 @@ def game_loop():
                 if event.key == pygame.K_c:
                     c_but = False
 
+        # Render moving background
+        background.blit()
 
+
+
+
+
+        # Advance time and update
+        stopwatch.tick()
         clock.tick(60)
+        pygame.display.update()
 
+
+# Starts the main loop and resets all variables to default
 game_loop()
