@@ -1,6 +1,7 @@
 from settings import *
 import pygame
 
+
 class Background:
     def __init__(self, screen):
         self.image_surf = pygame.image.load("images/background.png")
@@ -39,9 +40,18 @@ class Plane:
         self.y = display_height / 2 - 100
         self.degree = 0
         self.lives = 100
+        self.last_shot = 0
+        self.type = "user"
+        self.fired_main = 0
+        self.fired_secondary = 0
+        self.main_weapon = "bullet_1"
+        self.secondary_weapon = "missle_1"
 
-    def calc_degree(self, up, down):
+    def calc_degree(self, kb):
         degree = self.degree
+        up = kb.up
+        down = kb.down
+
         if down:
             if degree > -20:
                 degree -= 1
@@ -61,7 +71,12 @@ class Plane:
                 degree = 0
         self.degree = degree
 
-    def calc_pos(self, up, down, left, right):
+    def calc_pos(self, kb):
+        up = kb.up
+        down = kb.down
+        left = kb.left
+        right = kb.right
+
         if up:
             self.y -= up_speed
         if down:
@@ -82,9 +97,64 @@ class Plane:
         self.image_surf_rotated = rot_center(self.image_surf, self.degree)
         self.screen.blit(self.image_surf_rotated, (self.x, self.y))
 
+    def fire(self, kb, stopwatch, bullets):
+        last_shot = self.last_shot
+        time_since = stopwatch.mill - last_shot
+        main_weapon = self.main_weapon
+        secondary_weapon = self.secondary_weapon
+
+        # Fire from main weapon
+        if kb.space and (time_since) >= Bullets.lag(main_weapon):
+            bullet = Bullet(self, main_weapon, Bullets.damage(main_weapon), kb)
+            bullets.add(bullet)
+            self.fired_main += 1
+            self.last_shot = stopwatch.mill
+
     def reset(self):
         self.__init__(self.screen)
 
+class Bullets:
+    def __init__(self):
+        self.total_count = 0
+        self.active_count = 0
+        self.active_bullets = []
 
+    def add(self, bullet):
+        self.active_bullets.append(bullet)
+        self.total_count += 1
+        self.active_count += 1
 
+    def remove(self, bullet):
+        self.active_bullets.remove(bullet)
+        self.active_count -= 1
 
+    @staticmethod
+    def lag(type):
+        if type == "bullet_1":
+            return bullet_1_lag
+
+    @staticmethod
+    def damage(type):
+        if type == "bullet_1":
+            return bullet_1_damage
+
+class Bullet:
+    def __init__(self, plane, type, damage, kb):
+        self.x = plane.x
+        self.y = plane.y
+        self.degree = plane.degree
+        self.damage = damage
+        self.type = type
+
+class Keyboard:
+    def __init__(self):
+        self.down = False
+        self.up = False
+        self.left = False
+        self.right = False
+        self.c = False
+        self.space = False
+        self.fire = False
+
+    def reset(self):
+        self.__init__()
