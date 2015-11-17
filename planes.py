@@ -11,23 +11,17 @@ def game_loop():
     pygame.event.clear()
 
 
-    """ INITIATE ALL GAME SPECIFIC VARIABLES AND OBJECTS """
+    """ INITIATE ALL GAME SPECIFIC VARIABLES AND RESET OBJECTS (in case of restart)"""
     # Nuppude asendid
-    down_arrow = False
-    up_arrow = False
-    left_arrow = False
-    right_arrow = False
-    space = False
-    c_but = False
+    k_down = False
+    k_up = False
+    k_left = False
+    k_right = False
+    k_space = False
+    k_c = False
 
-    # Create necessary objects
-    background = Background(screen)
-    # print(Background.speeds)
-    # plane = Plane()
-    # enemies = Enemies()
-    # bullets = Bullets()
-    # missles = Missles()
-    stopwatch = Stopwatch()
+    plane.reset()
+    stopwatch.reset()
     """"""""""""""""""""""""""""""""""""""""""
 
     while True:
@@ -37,35 +31,39 @@ def game_loop():
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    down_arrow = True
+                    k_down = True
                 if event.key == pygame.K_UP:
-                    up_arrow = True
+                    k_up = True
                 if event.key == pygame.K_LEFT:
-                    left_arrow = True
+                    k_left = True
                 if event.key == pygame.K_RIGHT:
-                    right_arrow = True
+                    k_right = True
                 if event.key == pygame.K_SPACE:
-                    space = True
+                    k_space = True
                 if event.key == pygame.K_c:
-                    c_but = True
+                    k_c = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
-                    down_arrow = False
+                    k_down = False
                 if event.key == pygame.K_UP:
-                    up_arrow = False
+                    k_up = False
                 if event.key == pygame.K_LEFT:
-                    left_arrow = False
+                    k_left = False
                 if event.key == pygame.K_RIGHT:
-                    right_arrow = False
+                    k_right = False
                 if event.key == pygame.K_SPACE:
-                    space = False
+                    k_space = False
                 if event.key == pygame.K_c:
-                    c_but = False
+                    k_c = False
 
         # Render moving background
         background.blit()
 
-
+        """ USER PLANE """
+        plane.calc_degree(k_up, k_down)
+        plane.calc_pos(k_up, k_down, k_left, k_right)
+        plane.blit()
+        """"""""""""""""""
 
 
 

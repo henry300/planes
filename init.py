@@ -15,6 +15,15 @@ pygame.mouse.set_visible(mouse)
 # Create clock for the game
 clock = pygame.time.Clock()
 
+# Create necessary objects
+background = Background(screen)
+# print(Background.speeds)
+plane = Plane(screen)
+# enemies = Enemies()
+# bullets = Bullets()
+# missles = Missles()
+stopwatch = Stopwatch()
+
 # Nuppude asendid
 down_arrow = False
 up_arrow = False
