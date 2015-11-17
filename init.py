@@ -17,11 +17,10 @@ clock = pygame.time.Clock()
 
 # Create necessary objects
 background = Background(screen)
-# print(Background.speeds)
 plane = Plane(screen)
+keyboard = Keyboard()
 # enemies = Enemies()
-# bullets = Bullets()
-# missles = Missles()
+bullets = Bullets()
 stopwatch = Stopwatch()
 
 # Nuppude asendid
@@ -31,15 +30,3 @@ left_arrow = False
 right_arrow = False
 space = False
 c_but = False
-
-# Create necessary objects
-# background = Background()
-# print(Background.speeds)
-# plane = Plane()
-# enemies = Enemies()
-# bullets = Bullets()
-# missles = Missles()
-# stopwatch = Stopwatch()
-
-
-

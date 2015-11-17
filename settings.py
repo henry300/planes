@@ -21,13 +21,8 @@ down_speed = 3
 left_speed = 3
 right_speed = 3
 
-# Bullet properties
-bullet_speed = 10
-bullet_density = 7    #Smaller number is more dense
-bullet_damage = 10
-
-# Missle properties
-missle_speed = 10
-missle_density = 2
-missle_damage = 20
+# Bullet_1 properties
+bullet_1_speed = 10
+bullet_1_lag = 10
+bullet_1_damage = 10
 

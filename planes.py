@@ -12,14 +12,9 @@ def game_loop():
 
 
     """ INITIATE ALL GAME SPECIFIC VARIABLES AND RESET OBJECTS (in case of restart)"""
-    # Nuppude asendid
-    k_down = False
-    k_up = False
-    k_left = False
-    k_right = False
-    k_space = False
-    k_c = False
+    # Keyboard button states
 
+    keyboard.reset()
     plane.reset()
     stopwatch.reset()
     """"""""""""""""""""""""""""""""""""""""""
@@ -31,39 +26,68 @@ def game_loop():
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    k_down = True
+                    keyboard.down = True
                 if event.key == pygame.K_UP:
-                    k_up = True
+                    keyboard.up = True
                 if event.key == pygame.K_LEFT:
-                    k_left = True
+                    keyboard.left = True
                 if event.key == pygame.K_RIGHT:
-                    k_right = True
+                    keyboard.right = True
                 if event.key == pygame.K_SPACE:
-                    k_space = True
+                    keyboard.space = True
+                    keyboard.fire = True
                 if event.key == pygame.K_c:
-                    k_c = True
+                    keyboard.c = True
+                    keyboard.fire = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
-                    k_down = False
+                    keyboard.down = False
                 if event.key == pygame.K_UP:
-                    k_up = False
+                    keyboard.up = False
                 if event.key == pygame.K_LEFT:
-                    k_left = False
+                    keyboard.left = False
                 if event.key == pygame.K_RIGHT:
-                    k_right = False
+                    keyboard.right = False
                 if event.key == pygame.K_SPACE:
-                    k_space = False
+                    keyboard.space = False
+                    keyboard.fire = False
                 if event.key == pygame.K_c:
-                    k_c = False
+                    keyboard.c = False
+                    keyboard.fire = False
 
         # Render moving background
         background.blit()
 
         """ USER PLANE """
-        plane.calc_degree(k_up, k_down)
-        plane.calc_pos(k_up, k_down, k_left, k_right)
+        plane.calc_degree(keyboard)
+        plane.calc_pos(keyboard)
         plane.blit()
         """"""""""""""""""
+
+
+        """ FIRE FROM USER WEAPON WHEN NECCESSAŖY"""
+        if keyboard.fire:
+            plane.fire(keyboard, stopwatch, bullets)
+        """"""""""""""""""""""""""""""""""""""
+
+
+        # """ RENDER VISIBLE BULLETS"""
+        # bullets.blit()
+        # """"""""""""""""""""""""""""""
+
+
+        # """ ENEMIES """
+        # # Add new enemies based on topwatch
+        # enemies.add_new_enemies(stopwatch)
+        #
+        # # Calculate enemie positions and collisions with user bullets/missles
+        # enemies.calc_pos(plane)
+        # enemies.check_col(bullets)
+        #
+        # # Render enemies
+        # enemies.blit()
+        # """"""""""""""
+
 
 
 
@@ -72,6 +96,6 @@ def game_loop():
         clock.tick(60)
         pygame.display.update()
 
-
 # Starts the main loop and resets all variables to default
 game_loop()
+
