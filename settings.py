@@ -21,16 +21,6 @@ down_speed = 3
 left_speed = 3
 right_speed = 3
 
-# Bullet_1 properties
-bullet_1_speed = 10
-bullet_1_lag = 10
-bullet_1_damage = 10
-
-# Missle_1 properties
-missle_1_speed = 10
-missle_1_lag = 0
-missle_1_damage = 10
-
 # Ammo names and properties
 ammo = \
     {
@@ -38,12 +28,16 @@ ammo = \
         'speed' : 10,
         'damage': 10,
         'lag'   : 10,
+        'x_off' : 7,          # Distance between bullet and png edge horizontally
+        'y_off' : 17,         # Distance between bullet and png edge vertically
         'bullet_image' : "images/bullet.png"
     },
     'missile_1' : {
         'speed' : 20,
         'damage': 10,
         'lag'   : 0,
+        'x_off' : 7,
+        'y_off' : 17,
         'bullet_image' : "images/bullet.png"
     }}
 

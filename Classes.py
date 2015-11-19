@@ -60,7 +60,7 @@ class Plane:
     def calc_weapon_pos(self):
         x_offset = cos(self.degree*pi/180) * 50
         y_offset = -sin(self.degree*pi/180) * 50
-        return (55 + x_offset + self.x), (29 + y_offset + self.y)
+        return (40 + x_offset + self.x), (46 + y_offset + self.y)
 
     def blit(self):
         def rot_center(image, angle):
@@ -132,7 +132,9 @@ class Bullets:
 
     def blit(self):
         for bullet in self.active_bullets:
-            self.screen.blit(bullet.image, (bullet.x, bullet.y))
+            x_off = Bullets.info(bullet.type, 'x_off')
+            y_off = Bullets.info(bullet.type, 'y_off')
+            self.screen.blit(bullet.image, (bullet.x + x_off, bullet.y - y_off))
 
     @staticmethod
     def info(type, property):
