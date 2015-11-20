@@ -15,8 +15,15 @@ class Plane:
         self.type = "user"
         self.fired_main = 0
         self.fired_secondary = 0
-        self.main_weapon = "bullet_1"
+        self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
+        self.active_weapon = "bullet_1"
+
+    def swap_weapon(self):
+        if self.active_weapon == self.primary_weapon:
+            self.active_weapon = self.secondary_weapon
+        else:
+            self.active_weapon = self.primary_weapon
 
     def calc_degree(self, kb):
         degree = self.degree
@@ -78,25 +85,22 @@ class Plane:
         last_shot_secondary = self.last_shot_secondary
         time_since_main = stopwatch.mill - last_shot_main
         time_since_secondary = stopwatch.mill - last_shot_secondary
-        main_weapon = self.main_weapon
-        secondary_weapon = self.secondary_weapon
+        active_weapon = self.active_weapon
 
         # Fire from main weapon
-        if kb.space and (time_since_main) >= Bullets.info(main_weapon, 'lag'):
-            bullet = Bullet(self, main_weapon)
+        if kb.space and (time_since_main) >= Bullets.info(active_weapon, 'lag'):
+            bullet = Bullet(self, active_weapon)
             bullets.add(bullet)
             self.fired_main += 1
             self.last_shot_main = stopwatch.mill
 
-        # Fire from secondary weapon
-        if kb.c and (time_since_secondary) >= Bullets.info(secondary_weapon, 'lag'):
-            bullet = Bullet(self, secondary_weapon)
-            bullets.add(bullet)
-            self.fired_secondary += 1
-            self.last_shot_secondary = stopwatch.mill
-
     def reset(self):
         self.__init__(self.screen)
+
+class Enemies:
+    def __init__(self):
+        self.enemies = []
+        self.attacking_count = len(self.enemies)
 
 class Bullets:
     def __init__(self, screen):
@@ -159,7 +163,6 @@ class Keyboard:
         self.right = False
         self.c = False
         self.space = False
-        self.fire = False
 
     def reset(self):
         self.__init__()
@@ -193,3 +196,7 @@ class Stopwatch:
 
     def reset(self):
         self.__init__()
+
+class UpperInfo:
+    def __init__(self):
+        self.primary_active = pygame.image.load("")
