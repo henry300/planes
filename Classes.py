@@ -1,5 +1,6 @@
 from settings import *
 from math import *
+from random import *
 import pygame
 pygame.init()
 
@@ -18,7 +19,7 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
-        self.primary_ammo = 100
+        self.primary_ammo = 100000
         self.secondary_ammo = 10
         self.active_weapon = "bullet_1"
 
@@ -77,10 +78,10 @@ class Plane:
         if right:
             self.x += right_speed
 
-    def calc_weapon_pos(self):
+    def weapon_pos(self):
         x_offset = cos(self.degree*pi/180) * 50
         y_offset = -sin(self.degree*pi/180) * 50
-        return (40 + x_offset + self.x), (46 + y_offset + self.y)
+        return (56 + x_offset + self.x), (46 + y_offset + self.y)
 
     def blit(self):
         def rot_center(image, angle):
@@ -136,9 +137,95 @@ class Plane:
         self.__init__(self.screen)
 
 class Enemies:
-    def __init__(self):
+    def __init__(self, screen):
         self.enemies = []
         self.attacking_count = len(self.enemies)
+        self.screen = screen
+
+    def add(self, x, y, type, style):
+        self.enemies.append(Enemy(x, y, type, style))
+
+    def blit(self):
+        for enemy in self.enemies:
+            x_off = enemy.x_off
+            y_off = enemy.y_off
+            self.screen.blit(enemy.image, (enemy.x - x_off, enemy.y - y_off))
+            self.blit_lives(enemy)
+
+
+    def check_bullet_col(self, bullets):
+        for enemy in self.enemies:
+            for bullet in bullets.active_bullets:
+                if bullet.x >= enemy.x and bullet.y <= (enemy.y + enemy.height/2) and bullet.y >= (enemy.y - enemy.height/2):
+                    enemy.lives -= bullet.damage
+                    bullets.active_bullets.remove(bullet)
+
+    def remove_offscreen(self):
+        for enemy in self.enemies:
+            if enemy.x < -100:
+                self.enemies.remove(enemy)
+
+    def update_status(self):
+        for enemy in self.enemies:
+            if enemy.status != 'wrecked' and enemy.lives <= 0:
+                enemy.status = 'dead'
+
+    def calc_delta(self, plane):
+
+        for enemy in self.enemies:
+
+            """ IF ENEMY IS DEAD """
+            if enemy.status == 'dead':
+                # If enemy is still in the air
+                if not enemy.y > (display_height - randint(70,90)):
+                    enemy.dy = 8
+                else:
+                    enemy.destroy()
+                    enemy.dx = -bg_speed
+                    enemy.dy = 0
+            """"""""""""""""""""""""
+
+
+
+    def calc_pos(self, plane):
+        self.update_status()
+        self.calc_delta(plane)
+
+        for enemy in self.enemies:
+            enemy.x += enemy.dx
+            enemy.y += enemy.dy
+
+    def blit_lives(self, enemy):
+        if enemy.lives > 0:
+            x = enemy.x - enemy.x_off
+            y = enemy.y - enemy.y_off + 130
+            pygame.draw.rect(self.screen, red, (x,y,100*1.5,5))
+            pygame.draw.rect(self.screen, green, (x,y,(enemy.lives / enemy.max_lives * 100)*1.5,5))
+
+
+    @staticmethod
+    def info(type, property):
+        return enemy_info[type][property]
+
+class Enemy:
+    def __init__(self, x, y, type, style):
+        self.x = x
+        self.y = y
+        self.dx = 0
+        self.dy = 0
+        self.x_off = Enemies.info(type, 'x_off')
+        self.y_off = Enemies.info(type, 'y_off')
+        self.height = Enemies.info(type, 'height')
+        self.status = 'flying'
+        self.style = style
+        self.type = type
+        self.max_lives = Enemies.info(type, 'max_lives')
+        self.lives = self.max_lives
+        self.image = pygame.image.load(Enemies.info(type, 'image'))
+
+    def destroy(self):
+        self.status = 'wrecked'
+        self.image = pygame.image.load(Enemies.info(self.type, 'wrecked_image'))
 
 class Bullets:
     def __init__(self, screen):
@@ -176,7 +263,7 @@ class Bullets:
         for bullet in self.active_bullets:
             x_off = Bullets.info(bullet.type, 'x_off')
             y_off = Bullets.info(bullet.type, 'y_off')
-            self.screen.blit(bullet.image, (bullet.x + x_off, bullet.y - y_off))
+            self.screen.blit(bullet.image, (bullet.x - x_off, bullet.y - y_off))
 
     @staticmethod
     def info(type, property):
@@ -184,8 +271,8 @@ class Bullets:
 
 class Bullet:
     def __init__(self, origin, type):
-        self.x = origin.calc_weapon_pos()[0]
-        self.y = origin.calc_weapon_pos()[1]
+        self.x = origin.weapon_pos()[0]
+        self.y = origin.weapon_pos()[1]
         self.degree = origin.degree
         self.damage = Bullets.info(type, 'damage')
         self.type = type

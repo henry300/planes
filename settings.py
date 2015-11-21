@@ -13,7 +13,9 @@ display_height = 600
 bg_speed = 7
 
 # Basic colors
-red = (255,0,0)
+red = (210,0,0)
+green = (0,117,0)
+white = (255,255,255)
 l_blue = (31, 181, 195)
 d_blue = (7, 66, 79)
 
@@ -31,7 +33,7 @@ ammo = {
     'bullet_1' : {
         'speed' : 10,
         'damage': 10,
-        'lag'   : 10,
+        'lag'   : 7,
         'single': False,
         'x_off' : 7,          # Distance between bullet and png edge horizontally
         'y_off' : 17,         # Distance between bullet and png edge vertically
@@ -41,14 +43,27 @@ ammo = {
     },
     'missile_1' : {
         'speed' : 20,
-        'damage': 10,
-        'lag'   : 5,
+        'damage': 50,
+        'lag'   : 50,
         'single': False,
         'x_off' : 7,
         'y_off' : 17,
         'bullet_image' : "images/bullet.png",
         'bullet_icon_active'    : "images/secondary_active.png",
         'bullet_icon_unactive'  : "images/secondary_unactive.png"
+    }
+}
+
+# Enemie names and properties
+enemy_info = {
+    'blue_heli' : {
+        'max_lives' : 100,
+        'ammo'  : None,
+        'image' : "images/blue_heli.png",
+        'wrecked_image' : "images/blue_heli_wrecked.png",
+        'x_off': 60,
+        'y_off': 70,
+        'height' : 110
     }
 }
 

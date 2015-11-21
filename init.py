@@ -1,5 +1,4 @@
 from settings import *
-from logic import *
 from Classes import *
 from math import *
 from random import *
@@ -19,9 +18,10 @@ clock = pygame.time.Clock()
 background = Background(screen)
 plane = Plane(screen)
 keyboard = Keyboard()
-# enemies = Enemies()
-bullets = Bullets()
+enemies = Enemies(screen)
+bullets = Bullets(screen)
 stopwatch = Stopwatch()
+upperInfo = UpperInfo(screen)
 
 # Nuppude asendid
 down_arrow = False

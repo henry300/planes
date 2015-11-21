@@ -5,6 +5,7 @@ Tartu Ülikool 2015
 """
 from init import *
 
+enemies.add(1000,200, 'blue_heli', 'sin_passing')
 
 def game_loop():
     pygame.event.clear()
@@ -79,17 +80,20 @@ def game_loop():
 
 
 
-        # """ ENEMIES """
+        """ ENEMIES """
         # # Add new enemies based on stopwatch
         # enemies.add_new_enemies(stopwatch)
         #
         # # Calculate enemy positions and collisions with user bullets/missles
-        # enemies.calc_pos(plane)
-        # enemies.check_col(bullets.active_bullets)
+        enemies.calc_pos(plane)
+        enemies.check_bullet_col(bullets)
+        enemies.remove_offscreen()
+
+
         #
         # # Render enemies
-        # enemies.blit()
-        # """"""""""""""
+        enemies.blit()
+        """"""""""""""
 
 
         # Advance time and update
