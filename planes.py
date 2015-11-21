@@ -54,7 +54,7 @@ def game_loop():
         background.blit()
 
         """ UPPER INFO PANEL """
-        upperInfo.blit_primary_weapon_img(plane)
+        upperInfo.blit_bullet_icons(plane, stopwatch)
         """"""""""""""""""""""""
 
 
@@ -69,6 +69,7 @@ def game_loop():
         if keyboard.space:
             plane.fire(keyboard, stopwatch, bullets)
         """"""""""""""""""""""""""""""""""""""""""
+
 
 
         """ CALCULATE AND RENDER VISIBLE BULLETS"""
