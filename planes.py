@@ -4,7 +4,6 @@ Authors: Henry Teigar & Miron Storozev
 Tartu Ülikool 2015
 """
 from init import *
-pygame.init()
 
 
 def game_loop():
@@ -54,7 +53,7 @@ def game_loop():
         background.blit()
 
         """ UPPER INFO PANEL """
-        upperInfo.blit_bullet_icons(plane, stopwatch)
+        upperInfo.blit(plane, stopwatch)
         """"""""""""""""""""""""
 
 

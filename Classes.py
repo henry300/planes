@@ -1,6 +1,7 @@
 from settings import *
 from math import *
 import pygame
+pygame.init()
 
 class Plane:
     def __init__(self, screen):
@@ -17,6 +18,8 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
+        self.primary_ammo = 100
+        self.secondary_ammo = 10
         self.active_weapon = "bullet_1"
 
     def swap_weapon(self):
@@ -99,26 +102,34 @@ class Plane:
 
         # Assign correct lag to active weapon
         if self.active_weapon == self.primary_weapon:
+            active_ammo = self.primary_ammo
             if last_shot_primary != 0:
                 time_since_active = time_since_primary
             else:
                 time_since_active = 999999999
         else:
+            active_ammo = self.secondary_ammo
             if last_shot_secondary != 0:
                 time_since_active = time_since_secondary
             else:
                 time_since_active = 999999999
 
         # Fire from main weapon
-        if kb.space and (time_since_active) >= Bullets.info(active_weapon, 'lag'):
+        if kb.space and (time_since_active) >= Bullets.info(active_weapon, 'lag') and active_ammo > 0:
             if ammo[active_weapon]['single'] is False or kb.fire is True:
                 bullet = Bullet(self, active_weapon)
                 bullets.add(bullet)
-                self.fired_primary += 1
                 if active_weapon == self.primary_weapon:
                     self.last_shot_primary = stopwatch.mill
                 else:
                     self.last_shot_secondary = stopwatch.mill
+
+                # Reduce ammo
+                if active_weapon == self.primary_weapon:
+                    self.primary_ammo -= 1
+                else:
+                    self.secondary_ammo -= 1
+
                 kb.fire = False
 
     def reset(self):
@@ -234,10 +245,14 @@ class UpperInfo:
 
     def __init__(self, screen):
         self.screen = screen
-        self.primary_x = 500
-        self.primary_y = 20
-        self.secondary_x = 600
-        self.secondary_y = 20
+        self.primary_x = 170
+        self.primary_y = 0
+        self.secondary_x = 350
+        self.secondary_y = 0
+        self.heart_x = -10
+        self.heart_y = -10
+        self.heart = pygame.image.load("images/heart.png")
+        self.font = pygame.font.Font("/Library/Fonts/MyriadPro-Bold.otf", 40)
 
     def blit_bullet_icons(self, plane, stopwatch):
 
@@ -273,10 +288,29 @@ class UpperInfo:
         pygame.draw.rect(self.screen, d_blue, (self.primary_x + 34, self.primary_y + 66,42 * load_percent_primary,4))
         pygame.draw.rect(self.screen, d_blue, (self.secondary_x + 34, self.secondary_y + 66,42 * load_percent_secondary,4))
 
-    # def blit_lives(self, plane):
+    def blit_heart(self):
+        self.screen.blit(self.heart, (self.heart_x, self.heart_y))
 
+    def blit_lives(self, plane):
+        textSurface = self.font.render(str(plane.lives), True, white)
+        textRect = textSurface.get_rect()
+        textRect.center = (self.heart_x + 100 + textRect.width/2, self.heart_y + 55)
+        self.screen.blit(textSurface, textRect)
 
+    def blit_ammo(self, plane):
+        textSurface = self.font.render(str(plane.primary_ammo), True, white)
+        textRect = textSurface.get_rect()
+        textRect.center = (self.primary_x + 90 + textRect.width/2, self.heart_y + 55)
 
+        textSurface2 = self.font.render(str(plane.secondary_ammo), True, white)
+        textRect2 = textSurface2.get_rect()
+        textRect2.center = (self.secondary_x + 90 + textRect2.width/2, self.heart_y + 55)
 
+        self.screen.blit(textSurface, textRect)
+        self.screen.blit(textSurface2, textRect2)
 
-
+    def blit(self, plane, stopwatch):
+        self.blit_bullet_icons(plane, stopwatch)
+        self.blit_heart()
+        self.blit_lives(plane)
+        self.blit_ammo(plane)
