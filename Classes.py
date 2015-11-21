@@ -146,6 +146,10 @@ class Enemies:
     def add(self, x, y, type, style):
         self.enemies.append(Enemy(x, y, type, style))
 
+    def addInfo(self, gameplay, stopwatch):
+        self.gameplay = gameplay
+        self.stopwatch = stopwatch
+
     def blit(self):
         self.update_status()
         for enemy in self.enemies:
@@ -157,7 +161,7 @@ class Enemies:
     def check_bullet_col(self, bullets):
         for enemy in self.enemies:
             for bullet in bullets.active_bullets:
-                if bullet.x >= enemy.x and bullet.y <= (enemy.y + enemy.height/2) and bullet.y >= (enemy.y - enemy.height/2):
+                if bullet.x >= enemy.x and bullet.y <= (enemy.y + enemy.height/2) and bullet.y >= (enemy.y - enemy.height/2) and enemy.status != 'wrecked':
                     enemy.lives -= bullet.damage
                     bullets.active_bullets.remove(bullet)
 
@@ -165,11 +169,20 @@ class Enemies:
         for enemy in self.enemies:
             if enemy.x < -100:
                 self.enemies.remove(enemy)
+                self.gameplay.remaining_enemies -= 1
 
     def update_status(self):
         for enemy in self.enemies:
             if enemy.status != 'wrecked' and enemy.lives <= 0:
                 enemy.status = 'dead'
+
+    def slow_to_stop(self, x1, x2, cur, v0):
+        dist = abs(x2-x1)
+        travelled = abs(x1-cur)
+        if (dist - travelled) > 1:
+            return v0 * (1 - (travelled / dist)) - 0.5
+        else:
+            return -0.5
 
     def calc_delta(self, plane):
         for enemy in self.enemies:
@@ -179,12 +192,43 @@ class Enemies:
                 if not enemy.y > (display_height - randint(70,90)):
                     enemy.dy = 8
                 else:
-                    enemy.destroy()
+                    enemy.destroy(self.gameplay)
                     enemy.dx = -bg_speed
                     enemy.dy = 0
             elif enemy.status != 'wrecked':
-                if enemy.style == 'sin_passing':
-                    enemy.dx = -4
+
+
+                # SIN_PASSING_SLOW
+                if enemy.style == 'sin_passing_slow':
+                    enemy.y += 1 * sin(enemy.x * 0.01)
+                    enemy.dx = -2
+
+                # HOVERING LARGE CIRC
+                elif enemy.style == 'hovering_large_circ':
+                    if enemy.x > display_width - 200 and enemy.movePhase == 0:
+                        if enemy.x < display_width - 50:
+                            enemy.dx = self.slow_to_stop(display_width-50, display_width-200, enemy.x, -4)
+                        else:
+                            enemy.dx = -4
+                    else:
+                        enemy.movePhase = 1
+                        enemy.dx = cos(self.stopwatch.sec * 0.5)
+                        enemy.dy = sin(self.stopwatch.sec * 0.5)
+
+                # HOVERING MOVING
+                elif enemy.style == 'hovering_moving':
+                    if enemy.x > display_width - 200 and enemy.movePhase == 0:
+                        if enemy.x < display_width - 50:
+                            enemy.dx = self.slow_to_stop(display_width-50, display_width-200, enemy.x, -4)
+                        else:
+                            enemy.dx = -4
+                    else:
+                        enemy.movePhase = 1
+                        enemy.x += cos(enemy.y * 0.05)
+                        enemy.dy = sin(self.stopwatch.sec * 0.5)
+
+
+
 
     def calc_pos(self, plane):
         self.calc_delta(plane)
@@ -217,13 +261,15 @@ class Enemy:
         self.status = 'flying'
         self.style = style
         self.type = type
+        self.value = Enemies.info(type, 'value')
         self.max_lives = Enemies.info(type, 'max_lives')
         self.lives = self.max_lives
         self.image = pygame.image.load(Enemies.info(type, 'image'))
+        self.movePhase = 0
 
-    def destroy(self):
+    def destroy(self, gameplay):
         self.status = 'wrecked'
-
+        gameplay.score += self.value
         self.image = pygame.image.load(Enemies.info(self.type, 'wrecked_image'))
 
 class Bullets:
@@ -407,6 +453,7 @@ class Gameplay:
         self.wave_nr = 0
         self.wave = self.plot[0]
         self.total_waves = len(self.plot)
+        self.remaining_enemies = 0
         self.score = 0
         self.spawned = False
 
@@ -415,47 +462,30 @@ class Gameplay:
         self.wave = plot[self.wave_nr]
         self.spawned = False
 
-    def spawn(self, enemies):
+    def addInfo(self, enemies):
+        self.enemies = enemies
+
+    def spawn(self):
         if self.spawned == False:
             for col_nr, col in enumerate(self.wave):
                 for object_nr, object in enumerate(col):
-                    # INSIDE COLUMN
+                    # INSIDE COLUMN #
+
                     x = 1400 + col_nr * 200
                     y = object[2]
 
                     # If enemy
                     if len(object) == 3:
-                        enemies.add(x, y, object[0], object[1])
+                        self.enemies.add(x, y, object[0], object[1])
+                        self.remaining_enemies += 1
 
                     # If bonuspack
                     else:
                         pass
             self.spawned = True
 
-        if len(enemies.enemies) == 0:
+        if self.remaining_enemies == 0:
             if self.wave_nr != self.total_waves - 1:
                 self.next_wave()
             else:
                 print("You have completed the game!")
-
-
-    # FOR RANDOM SPAWN LOCATION - NOT USED AT THIS POINT OF TIME
-    def calc_spawn_coord(self, col_nr, object_nr, objects_in_col):
-        x = 200 + col_nr * 200
-
-        if objects_in_col == 1:
-            y = randint(90, display_height - 90)
-        elif objects_in_col == 2:
-            if object_nr == 0:
-                y = randint(90, display_height // 2 - 90)
-            else:
-                y = randint(display_height // 2 + 90, display_height - 90)
-        elif objects_in_col == 3:
-            if object_nr == 0:
-                y = randint(90, display_height // 3 - 50)
-            elif object_nr == 1:
-                y = randint(display_height // 3 + 50, 2*display_height//3 - 50)
-            else:
-                y = randint(2*display_height//3 + 50, display_height - 90)
-
-        return x, y

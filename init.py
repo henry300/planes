@@ -22,6 +22,7 @@ enemies = Enemies(screen)
 bullets = Bullets(screen)
 stopwatch = Stopwatch()
 upperInfo = UpperInfo(screen)
+gameplay = Gameplay()
 
 # Nuppude asendid
 down_arrow = False

@@ -1,18 +1,15 @@
 plot = {
-    0: {
-        ('blue_heli', 'sin_passing')
-    },
-    1: {
-        ('blue_heli', 'same_position'),
-        ('blue_heli', 'same_position')
-    },
-    2: {
-        ('fighter_heli', 'circling'),
-        ('blue_heli', 'cos_passing')
-    }
-    # ...
+    0: [
+        [
+            ('blue_heli', 'hovering_moving', 250)
+        ],
+    ],
+    1: [
+        [
+            ('blue_heli', 'sin_passing_slow', 150),
+            ('blue_heli', 'sin_passing_slow', 300),
+            ('blue_heli', 'sin_passing_slow', 450)
+        ]
+    ]
 }
-
-
-
 

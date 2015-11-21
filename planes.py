@@ -3,9 +3,13 @@
 Authors: Henry Teigar & Miron Storozev
 Tartu Ülikool 2015
 """
+
+""" TODO """
+# Bullet image degree calculation
+""""""""""""
+
 from init import *
 
-enemies.add(1000,200, 'blue_heli', 'sin_passing')
 
 def game_loop():
     pygame.event.clear()
@@ -71,7 +75,6 @@ def game_loop():
         """"""""""""""""""""""""""""""""""""""""""
 
 
-
         """ CALCULATE AND RENDER VISIBLE BULLETS"""
         bullets.calc_pos()
         bullets.remove_offscreen()
@@ -79,27 +82,26 @@ def game_loop():
         """"""""""""""""""""""""""""""
 
 
-
         """ ENEMIES """
-        # # Add new enemies based on stopwatch
-        # enemies.add_new_enemies(stopwatch)
-        #
-        # # Calculate enemy positions and collisions with user bullets/missles
         enemies.calc_pos(plane)
+        enemies.addInfo(gameplay, stopwatch)
         enemies.check_bullet_col(bullets)
         enemies.remove_offscreen()
-
-
-        #
-        # # Render enemies
         enemies.blit()
         """"""""""""""
 
 
-        # Advance time and update
+        """ GAMEPLAY """
+        gameplay.addInfo(enemies)
+        gameplay.spawn()
+        """"""""""""""
+
+
+        """ TIME """
         stopwatch.tick()
         clock.tick(60)
         pygame.display.update()
+        """"""""""""
 
 # Starts the main loop and resets all variables to default
 game_loop()

@@ -32,7 +32,7 @@ right_speed = 3
 ammo = {
     'bullet_1' : {
         'speed' : 10,
-        'damage': 10,
+        'damage': 20,
         'lag'   : 7,
         'single': False,
         'x_off' : 7,          # Distance between bullet and png edge horizontally
@@ -54,7 +54,7 @@ ammo = {
     }
 }
 
-# Enemie names and properties
+# Enemy names and properties
 enemy_info = {
     'blue_heli' : {
         'max_lives' : 100,
@@ -63,7 +63,8 @@ enemy_info = {
         'wrecked_image' : "images/blue_heli_wrecked.png",
         'x_off': 60,
         'y_off': 70,
-        'height' : 110
+        'height' : 110,
+        'value' : 50
     }
 }
 
