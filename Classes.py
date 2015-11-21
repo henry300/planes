@@ -242,29 +242,23 @@ class UpperInfo:
     def blit_bullet_icons(self, plane, stopwatch):
 
         # Primary weapon info
-        primary_x = self.primary_x
-        primary_y = self.primary_y
-        primary_weapon = plane.primary_weapon
-        primary_lag = ammo[primary_weapon]['lag']
+        primary_lag = ammo[plane.primary_weapon]['lag']
         time_since_primary = stopwatch.mill - plane.last_shot_primary
         primary_img_active = UpperInfo.primary_img_active
         primary_img_unactive = UpperInfo.primary_img_unactive
 
         # Secondary weapon info
-        secondary_x = self.secondary_x
-        secondary_y = self.secondary_y
-        secondary_weapon = plane.secondary_weapon
-        secondary_lag = ammo[secondary_weapon]['lag']
+        secondary_lag = ammo[plane.secondary_weapon]['lag']
         time_since_secondary = stopwatch.mill - plane.last_shot_secondary
         secondary_img_active = UpperInfo.secondary_img_active
         secondary_img_unactive = UpperInfo.secondary_img_unactive
 
         if plane.active_weapon == plane.primary_weapon:
-            self.screen.blit(primary_img_active, (primary_x, primary_y))
-            self.screen.blit(secondary_img_unactive, (secondary_x, secondary_y))
+            self.screen.blit(primary_img_active, (self.primary_x, self.primary_y))
+            self.screen.blit(secondary_img_unactive, (self.secondary_x, self.secondary_y))
         else:
-            self.screen.blit(primary_img_unactive, (primary_x, primary_y))
-            self.screen.blit(secondary_img_active, (secondary_x, secondary_y))
+            self.screen.blit(primary_img_unactive, (self.primary_x, self.primary_y))
+            self.screen.blit(secondary_img_active, (self.secondary_x, self.secondary_y))
 
         if time_since_primary >= primary_lag or plane.last_shot_primary == 0:
             load_percent_primary = 1
@@ -276,8 +270,11 @@ class UpperInfo:
         else:
             load_percent_secondary = (time_since_secondary / secondary_lag) % 1
 
-        pygame.draw.rect(self.screen, d_blue, (primary_x + 34, primary_y + 66,42 * load_percent_primary,4))
-        pygame.draw.rect(self.screen, d_blue, (secondary_x + 34, secondary_y + 66,42 * load_percent_secondary,4))
+        pygame.draw.rect(self.screen, d_blue, (self.primary_x + 34, self.primary_y + 66,42 * load_percent_primary,4))
+        pygame.draw.rect(self.screen, d_blue, (self.secondary_x + 34, self.secondary_y + 66,42 * load_percent_secondary,4))
+
+    # def blit_lives(self, plane):
+
 
 
 
