@@ -32,6 +32,7 @@ def game_loop():
                     keyboard.right = True
                 if event.key == pygame.K_SPACE:
                     keyboard.space = True
+                    keyboard.fire = True
                 if event.key == pygame.K_c:
                     plane.swap_weapon()
                     keyboard.c = True
@@ -53,7 +54,7 @@ def game_loop():
         background.blit()
 
         """ UPPER INFO PANEL """
-
+        upperInfo.blit_primary_weapon_img(plane)
         """"""""""""""""""""""""
 
 

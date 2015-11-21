@@ -10,10 +10,10 @@ class Plane:
         self.y = display_height / 2 - 100
         self.degree = 0
         self.lives = 100
-        self.last_shot_main = 0
+        self.last_shot_primary = 0
         self.last_shot_secondary = 0
         self.type = "user"
-        self.fired_main = 0
+        self.fired_primary = 0
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
@@ -81,18 +81,35 @@ class Plane:
         self.screen.blit(self.image_surf_rotated, (self.x, self.y))
 
     def fire(self, kb, stopwatch, bullets):
-        last_shot_main = self.last_shot_main
+        last_shot_primary = self.last_shot_primary
         last_shot_secondary = self.last_shot_secondary
-        time_since_main = stopwatch.mill - last_shot_main
+        time_since_primary = stopwatch.mill - last_shot_primary
         time_since_secondary = stopwatch.mill - last_shot_secondary
         active_weapon = self.active_weapon
 
+        # Assign correct lag to active weapon
+        if self.active_weapon == self.primary_weapon:
+            if last_shot_primary != 0:
+                time_since_active = time_since_primary
+            else:
+                time_since_active = 999999999
+        else:
+            if last_shot_secondary != 0:
+                time_since_active = time_since_secondary
+            else:
+                time_since_active = 999999999
+
         # Fire from main weapon
-        if kb.space and (time_since_main) >= Bullets.info(active_weapon, 'lag'):
-            bullet = Bullet(self, active_weapon)
-            bullets.add(bullet)
-            self.fired_main += 1
-            self.last_shot_main = stopwatch.mill
+        if kb.space and (time_since_active) >= Bullets.info(active_weapon, 'lag'):
+            if ammo[active_weapon]['single'] is False or kb.fire is True:
+                bullet = Bullet(self, active_weapon)
+                bullets.add(bullet)
+                self.fired_primary += 1
+                if active_weapon == self.primary_weapon:
+                    self.last_shot_primary = stopwatch.mill
+                else:
+                    self.last_shot_secondary = stopwatch.mill
+                kb.fire = False
 
     def reset(self):
         self.__init__(self.screen)
@@ -163,6 +180,7 @@ class Keyboard:
         self.right = False
         self.c = False
         self.space = False
+        self.fire = False
 
     def reset(self):
         self.__init__()
@@ -198,5 +216,16 @@ class Stopwatch:
         self.__init__()
 
 class UpperInfo:
-    def __init__(self):
-        self.primary_active = pygame.image.load("")
+    def __init__(self, screen):
+        self.screen = screen
+
+    def blit_primary_weapon_img(self, plane):
+        primary_active_img = pygame.image.load(ammo[plane.primary_weapon]['bullet_icon_active'])
+        primary_unactive_img = pygame.image.load(ammo[plane.primary_weapon]['bullet_icon_unactive'])
+
+        if plane.active_weapon == plane.primary_weapon:
+            self.screen.blit(primary_active_img, (500,200))
+        else:
+            self.screen.blit(primary_unactive_img, (500,200))
+
+

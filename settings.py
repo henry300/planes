@@ -22,22 +22,28 @@ left_speed = 3
 right_speed = 3
 
 # Ammo names and properties
-ammo = \
-    {
+ammo = {
     'bullet_1' : {
         'speed' : 10,
         'damage': 10,
         'lag'   : 10,
+        'single': False,
         'x_off' : 7,          # Distance between bullet and png edge horizontally
         'y_off' : 17,         # Distance between bullet and png edge vertically
-        'bullet_image' : "images/bullet.png"
+        'bullet_image' : "images/bullet.png",
+        'bullet_icon_active'  : "images/primary_active.png",
+        'bullet_icon_unactive'  : "images/primary_unactive.png"
     },
     'missile_1' : {
         'speed' : 20,
         'damage': 10,
-        'lag'   : 0,
+        'lag'   : 5,
+        'single': False,
         'x_off' : 7,
         'y_off' : 17,
-        'bullet_image' : "images/bullet.png"
-    }}
+        'bullet_image' : "images/bullet.png",
+        'bullet_icon_active'    : "images/primary_active.png",
+        'bullet_icon_unactive'  : "images/primary_active.png"
+    }
+}
 
