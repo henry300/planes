@@ -182,9 +182,9 @@ class Enemies:
                     enemy.destroy()
                     enemy.dx = -bg_speed
                     enemy.dy = 0
-
-            else:
-                continue
+            elif enemy.status != 'wrecked':
+                if enemy.style == 'sin_passing':
+                    enemy.dx = -4
 
     def calc_pos(self, plane):
         self.calc_delta(plane)
@@ -404,10 +404,11 @@ class Gameplay:
     def __init__(self):
         self.plot = plot
         self.wave_nr = 0
-        self.wave = self.plot[self.wave_nr]
-        self.spawned = False
+        self.wave = self.plot[0]
+        self.cols = len(self.plot[self.wave_nr])
         self.score = 0
         self.remaining_enemies = 0
+        self.spawned = False
 
     def next_wave(self):
         self.wave_nr += self.wave_nr
@@ -415,12 +416,43 @@ class Gameplay:
     def spawn(self, enemies):
         if self.spawned == False:
 
-            for object in self.wave:
-                # If enemy
-                if len(object) == 2:
-                    enemies.add(1000, 200, object[0], object[1])
+            for col_nr, col in enumerate(self.wave):
+                objects_in_col = len(col)
+                for object_nr, object in enumerate(col):
+                    if object_nr == 2:
+                        continue
 
-                # If bonuspack
-                else:
-                    pass
+                    x = 1400 + col_nr * 200
+                    y = object[2]
+
+                    # If enemy
+                    if len(object) == 3:
+
+                        enemies.add(x, y, object[0], object[1])
+
+                    # If bonuspack
+                    else:
+                        pass
+
             self.spawned = True
+
+    # FOR RANDOM SPAWN LOCATION - NOT USED AT THIS POINT OF TIME
+    def calc_spawn_coord(self, col_nr, object_nr, objects_in_col):
+        x = 200 + col_nr * 200
+
+        if objects_in_col == 1:
+            y = randint(90, display_height - 90)
+        elif objects_in_col == 2:
+            if object_nr == 0:
+                y = randint(90, display_height // 2 - 90)
+            else:
+                y = randint(display_height // 2 + 90, display_height - 90)
+        elif objects_in_col == 3:
+            if object_nr == 0:
+                y = randint(90, display_height // 3 - 50)
+            elif object_nr == 1:
+                y = randint(display_height // 3 + 50, 2*display_height//3 - 50)
+            else:
+                y = randint(2*display_height//3 + 50, display_height - 90)
+
+        return x, y
