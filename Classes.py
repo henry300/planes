@@ -223,6 +223,7 @@ class Enemy:
 
     def destroy(self):
         self.status = 'wrecked'
+
         self.image = pygame.image.load(Enemies.info(self.type, 'wrecked_image'))
 
 class Bullets:
@@ -405,36 +406,38 @@ class Gameplay:
         self.plot = plot
         self.wave_nr = 0
         self.wave = self.plot[0]
-        self.cols = len(self.plot[self.wave_nr])
+        self.total_waves = len(self.plot)
         self.score = 0
-        self.remaining_enemies = 0
         self.spawned = False
 
     def next_wave(self):
-        self.wave_nr += self.wave_nr
+        self.wave_nr += 1
+        self.wave = plot[self.wave_nr]
+        self.spawned = False
 
     def spawn(self, enemies):
         if self.spawned == False:
-
             for col_nr, col in enumerate(self.wave):
-                objects_in_col = len(col)
                 for object_nr, object in enumerate(col):
-                    if object_nr == 2:
-                        continue
-
+                    # INSIDE COLUMN
                     x = 1400 + col_nr * 200
                     y = object[2]
 
                     # If enemy
                     if len(object) == 3:
-
                         enemies.add(x, y, object[0], object[1])
 
                     # If bonuspack
                     else:
                         pass
-
             self.spawned = True
+
+        if len(enemies.enemies) == 0:
+            if self.wave_nr != self.total_waves - 1:
+                self.next_wave()
+            else:
+                print("You have completed the game!")
+
 
     # FOR RANDOM SPAWN LOCATION - NOT USED AT THIS POINT OF TIME
     def calc_spawn_coord(self, col_nr, object_nr, objects_in_col):
