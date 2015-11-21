@@ -42,13 +42,13 @@ ammo = {
         'bullet_icon_unactive'  : "images/primary_unactive.png"
     },
     'missile_1' : {
-        'speed' : 20,
+        'speed' : 10,
         'damage': 50,
         'lag'   : 50,
         'single': False,
         'x_off' : 7,
-        'y_off' : 17,
-        'bullet_image' : "images/bullet.png",
+        'y_off' : 28,
+        'bullet_image' : "images/missile_1.png",
         'bullet_icon_active'    : "images/secondary_active.png",
         'bullet_icon_unactive'  : "images/secondary_unactive.png"
     }
@@ -67,3 +67,13 @@ enemy_info = {
     }
 }
 
+# Bonus boxes
+bonus_boxes_info = {
+    'bullet_1_10' : {
+        'type' : 'ammo',
+        'addition' : 10,
+        'image' : "images/bullet_1_10.png",
+        'x_off': 60,
+        'y_off': 70,
+    }
+}
