@@ -1,4 +1,5 @@
 from settings import *
+from plot import *
 from math import *
 from random import *
 import pygame
@@ -146,12 +147,12 @@ class Enemies:
         self.enemies.append(Enemy(x, y, type, style))
 
     def blit(self):
+        self.update_status()
         for enemy in self.enemies:
             x_off = enemy.x_off
             y_off = enemy.y_off
             self.screen.blit(enemy.image, (enemy.x - x_off, enemy.y - y_off))
             self.blit_lives(enemy)
-
 
     def check_bullet_col(self, bullets):
         for enemy in self.enemies:
@@ -171,24 +172,21 @@ class Enemies:
                 enemy.status = 'dead'
 
     def calc_delta(self, plane):
-
         for enemy in self.enemies:
 
-            """ IF ENEMY IS DEAD """
+            # IF ENEMY IS DEAD
             if enemy.status == 'dead':
-                # If enemy is still in the air
                 if not enemy.y > (display_height - randint(70,90)):
                     enemy.dy = 8
                 else:
                     enemy.destroy()
                     enemy.dx = -bg_speed
                     enemy.dy = 0
-            """"""""""""""""""""""""
 
-
+            else:
+                continue
 
     def calc_pos(self, plane):
-        self.update_status()
         self.calc_delta(plane)
 
         for enemy in self.enemies:
@@ -401,3 +399,28 @@ class UpperInfo:
         self.blit_heart()
         self.blit_lives(plane)
         self.blit_ammo(plane)
+
+class Gameplay:
+    def __init__(self):
+        self.plot = plot
+        self.wave_nr = 0
+        self.wave = self.plot[self.wave_nr]
+        self.spawned = False
+        self.score = 0
+        self.remaining_enemies = 0
+
+    def next_wave(self):
+        self.wave_nr += self.wave_nr
+
+    def spawn(self, enemies):
+        if self.spawned == False:
+
+            for object in self.wave:
+                # If enemy
+                if len(object) == 2:
+                    enemies.add(1000, 200, object[0], object[1])
+
+                # If bonuspack
+                else:
+                    pass
+            self.spawned = True
