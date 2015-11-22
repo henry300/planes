@@ -6,6 +6,15 @@ Tartu Ülikool 2015
 
 """ TODO """
 # Bullet image degree calculation
+# Enemy and user collision
+# Shooting enemies
+# Bonus boxes
+# Much more moving styles
+# Proper gameplay
+# Show score
+# Pause
+# Start screen
+# Possibility to start over
 """"""""""""
 
 from init import *
@@ -40,6 +49,9 @@ def game_loop():
                 if event.key == pygame.K_c:
                     plane.swap_weapon()
                     keyboard.c = True
+                if event.key == pygame.K_x:
+                    plane.swap_single()
+                    keyboard.x = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     keyboard.down = False
@@ -53,6 +65,8 @@ def game_loop():
                     keyboard.space = False
                 if event.key == pygame.K_c:
                     keyboard.c = False
+                if event.key == pygame.K_x:
+                    keyboard.x = False
 
         # Render moving background
         background.blit()

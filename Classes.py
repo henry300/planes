@@ -23,6 +23,7 @@ class Plane:
         self.primary_ammo = 100000
         self.secondary_ammo = 10
         self.active_weapon = "bullet_1"
+        self.single = False
 
     def swap_weapon(self):
         if self.active_weapon == self.primary_weapon:
@@ -30,10 +31,22 @@ class Plane:
         else:
             self.active_weapon = self.primary_weapon
 
+    def swap_single(self):
+        if self.active_weapon == self.primary_weapon:
+            if self.single == True:
+                self.single = False
+                UpperInfo.primary_img_active = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_active'])
+                UpperInfo.primary_img_unactive = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_unactive'])
+            else:
+                self.single = True
+                UpperInfo.primary_img_active = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_active_single'])
+                UpperInfo.primary_img_unactive = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_unactive_single'])
+
     def change_primary_weapon(self, name):
         self.primary_weapon = name
         UpperInfo.primary_img_active = pygame.image.load(ammo[name]['bullet_icon_active'])
         UpperInfo.primary_img_unactive = pygame.image.load(ammo[name]['bullet_icon_unactive'])
+        self.single = Bullets.info(name, 'single')
 
     def change_secondary_weapon(self, name):
         self.secondary_weapon = name
@@ -118,7 +131,7 @@ class Plane:
 
         # Fire from main weapon
         if kb.space and (time_since_active) >= Bullets.info(active_weapon, 'lag') and active_ammo > 0:
-            if ammo[active_weapon]['single'] is False or kb.fire is True:
+            if self.single is False or kb.fire is True:
                 bullet = Bullet(self, active_weapon)
                 bullets.add(bullet)
                 if active_weapon == self.primary_weapon:
@@ -334,6 +347,7 @@ class Keyboard:
         self.c = False
         self.space = False
         self.fire = False
+        self.x = False
 
     def reset(self):
         self.__init__()
@@ -385,6 +399,7 @@ class UpperInfo:
         self.heart_y = -10
         self.heart = pygame.image.load("images/heart.png")
         self.font = pygame.font.Font("/Library/Fonts/MyriadPro-Bold.otf", 40)
+
 
     def blit_bullet_icons(self, plane, stopwatch):
 

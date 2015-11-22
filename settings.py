@@ -39,7 +39,10 @@ ammo = {
         'y_off' : 17,         # Distance between bullet and png edge vertically
         'bullet_image' : "images/bullet.png",
         'bullet_icon_active'  : "images/primary_active.png",
-        'bullet_icon_unactive'  : "images/primary_unactive.png"
+        'bullet_icon_unactive'  : "images/primary_unactive.png",
+        'bullet_icon_active_single' : "images/primary_active_single.png",
+        'bullet_icon_unactive_single' : "images/primary_unactive_single.png",
+
     },
     'missile_1' : {
         'speed' : 10,
