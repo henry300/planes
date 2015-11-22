@@ -216,6 +216,11 @@ class Enemies:
                     enemy.y += 1 * sin(enemy.x * 0.01)
                     enemy.dx = -2
 
+                # MOVING STRAIGHT
+                if enemy.style == 'moving_straight':
+                    enemy.dx = -2
+                    enemy.dy = 0
+
                 # HOVERING LARGE CIRC
                 elif enemy.style == 'hovering_large_circ':
                     if enemy.x > display_width - 200 and enemy.movePhase == 0:
@@ -230,7 +235,7 @@ class Enemies:
 
                 # HOVERING MOVING
                 elif enemy.style == 'hovering_moving':
-                    if enemy.x > display_width - 200 and enemy.movePhase == 0:
+                    if enemy.x > display_width - 400 and enemy.movePhase == 0:
                         if enemy.x < display_width - 50:
                             enemy.dx = self.slow_to_stop(display_width-50, display_width-200, enemy.x, -4)
                         else:
@@ -337,6 +342,37 @@ class Bullet:
         self.origin = origin
         self.image = pygame.image.load(Bullets.info(type, 'bullet_image'))
         self.speed = Bullets.info(type, 'speed')
+
+class BonusBoxes:
+    def __init__(self, screen):
+        self.bonusBoxes = []
+        self.screen = screen
+
+    def add(self, name, x, y):
+        self.bonusBoxes.append(BonusBox(name, x, y))
+
+    def blit(self):
+        for box in self.bonusBoxes:
+            self.screen.blit(box.image, (box.x, box.y))
+
+    def calc_pos(self):
+        for box in self.bonusBoxes:
+            box.x -= 2
+
+    @staticmethod
+    def info(name, property):
+        return bonus_boxes_info[name][property]
+
+class BonusBox:
+    def __init__(self, name, x, y):
+        self.x = x
+        self.y = y
+        self.type = BonusBoxes.info(name, 'type')
+        self.reference = BonusBoxes.info(name, 'reference')
+        self.addition = BonusBoxes.info(name, 'addition')
+        self.image = pygame.image.load(BonusBoxes.info(name, 'image'))
+        self.x_off = BonusBoxes.info(name, 'x_off')
+        self.y_off = BonusBoxes.info(name, 'y_off')
 
 class Keyboard:
     def __init__(self):
@@ -481,16 +517,24 @@ class Gameplay:
         self.score = 0
         self.spawned = False
         self.gameover = False
+        self.gameover_reason = ''
 
     def next_wave(self):
         self.wave_nr += 1
         self.wave = plot[self.wave_nr]
         self.spawned = False
 
-    def addInfo(self, enemies):
+    def addInfo(self, enemies, plane, bonusBoxes):
         self.enemies = enemies
+        self.plane = plane
+        self.bonusBoxes = bonusBoxes
+        print(self.score)
 
     def check_if_game_over(self):
+        if self.plane.lives <= 0:
+            self.gameover_reason = "You got destroyed!"
+            self.gameover = True
+
         return self.gameover
 
     def pause(self, keyboard, info):
@@ -526,19 +570,27 @@ class Gameplay:
         if self.spawned == False:
             for col_nr, col in enumerate(self.wave):
                 for object_nr, object in enumerate(col):
-                    # INSIDE COLUMN #
+                    # OBJECT IN COLUMN
 
-                    x = 1400 + col_nr * 200
-                    y = object[2]
 
                     # If enemy
                     if len(object) == 3:
+                        x = 1400 + col_nr * 200
+                        y = object[2]
                         self.enemies.add(x, y, object[0], object[1])
                         self.remaining_enemies += 1
 
-                    # If bonuspack
+                    # If bonuspack or new weapon etc
                     else:
-                        pass
+                        # If bonus pack
+                        if object[0] in bonus_boxes_info:
+                            x = 1400 + col_nr * 200
+                            self.bonusBoxes.add(object[0], x, object[1])
+
+
+
+
+
             self.spawned = True
 
         if self.remaining_enemies == 0:
@@ -547,5 +599,3 @@ class Gameplay:
             else:
                 print("You have completed the game!")
                 self.gameover = True
-
-
