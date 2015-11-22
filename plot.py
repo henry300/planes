@@ -9,7 +9,14 @@ plot = {
             ('blue_heli', 'sin_passing_slow', 150),
             ('blue_heli', 'sin_passing_slow', 300),
             ('blue_heli', 'sin_passing_slow', 450)
-        ]
+        ],
+        [],[],[],
+        [
+            ('blue_heli', 'sin_passing_slow', 150),
+            ('blue_heli', 'sin_passing_slow', 300),
+            ('blue_heli', 'sin_passing_slow', 450)
+        ],
+
     ]
 }
 

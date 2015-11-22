@@ -20,7 +20,7 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
-        self.primary_ammo = 100000
+        self.primary_ammo = 100
         self.secondary_ammo = 10
         self.active_weapon = "bullet_1"
         self.single = False
@@ -458,7 +458,7 @@ class Info:
         self.screen.blit(textSurface2, textRect2)
 
     def blit_pause(self):
-        textSurface = self.font.render(('PAUSED'), True, d_bluec)
+        textSurface = self.font.render(('PAUSED'), True, d_blue)
         textRect = textSurface.get_rect()
         textRect.center = (display_width/2,display_height/3)
         self.screen.blit(textSurface, textRect)
@@ -547,3 +547,5 @@ class Gameplay:
             else:
                 print("You have completed the game!")
                 self.gameover = True
+
+

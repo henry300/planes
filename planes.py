@@ -12,7 +12,7 @@ Tartu Ülikool 2015
 # Much more moving styles
 # Proper gameplay
 # Show score
-# Pause
+# Show wave nr
 # Start screen
 # Possibility to start over
 """"""""""""

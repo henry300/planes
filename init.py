@@ -21,7 +21,7 @@ keyboard = Keyboard()
 enemies = Enemies(screen)
 bullets = Bullets(screen)
 stopwatch = Stopwatch()
-upperInfo = UpperInfo(screen)
+info = Info(screen)
 gameplay = Gameplay()
 
 # Nuppude asendid
