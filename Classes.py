@@ -35,23 +35,23 @@ class Plane:
         if self.active_weapon == self.primary_weapon:
             if self.single == True:
                 self.single = False
-                UpperInfo.primary_img_active = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_active'])
-                UpperInfo.primary_img_unactive = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_unactive'])
+                Info.primary_img_active = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_active'])
+                Info.primary_img_unactive = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_unactive'])
             else:
                 self.single = True
-                UpperInfo.primary_img_active = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_active_single'])
-                UpperInfo.primary_img_unactive = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_unactive_single'])
+                Info.primary_img_active = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_active_single'])
+                Info.primary_img_unactive = pygame.image.load(ammo[self.primary_weapon]['bullet_icon_unactive_single'])
 
     def change_primary_weapon(self, name):
         self.primary_weapon = name
-        UpperInfo.primary_img_active = pygame.image.load(ammo[name]['bullet_icon_active'])
-        UpperInfo.primary_img_unactive = pygame.image.load(ammo[name]['bullet_icon_unactive'])
+        Info.primary_img_active = pygame.image.load(ammo[name]['bullet_icon_active'])
+        Info.primary_img_unactive = pygame.image.load(ammo[name]['bullet_icon_unactive'])
         self.single = Bullets.info(name, 'single')
 
     def change_secondary_weapon(self, name):
         self.secondary_weapon = name
-        UpperInfo.secondary_img_active = pygame.image.load(ammo[name]['bullet_icon_active'])
-        UpperInfo.secondary_img_unactive = pygame.image.load(ammo[name]['bullet_icon_unactive'])
+        Info.secondary_img_active = pygame.image.load(ammo[name]['bullet_icon_active'])
+        Info.secondary_img_unactive = pygame.image.load(ammo[name]['bullet_icon_unactive'])
 
     def calc_degree(self, kb):
         degree = self.degree
@@ -382,7 +382,7 @@ class Stopwatch:
     def reset(self):
         self.__init__()
 
-class UpperInfo:
+class Info:
 
     primary_img_active = pygame.image.load(ammo['bullet_1']['bullet_icon_active'])
     primary_img_unactive = pygame.image.load(ammo['bullet_1']['bullet_icon_unactive'])
@@ -399,6 +399,7 @@ class UpperInfo:
         self.heart_y = -10
         self.heart = pygame.image.load("images/heart.png")
         self.font = pygame.font.Font("/Library/Fonts/MyriadPro-Bold.otf", 40)
+        self.pause = False
 
 
     def blit_bullet_icons(self, plane, stopwatch):
@@ -406,14 +407,14 @@ class UpperInfo:
         # Primary weapon info
         primary_lag = ammo[plane.primary_weapon]['lag']
         time_since_primary = stopwatch.mill - plane.last_shot_primary
-        primary_img_active = UpperInfo.primary_img_active
-        primary_img_unactive = UpperInfo.primary_img_unactive
+        primary_img_active = Info.primary_img_active
+        primary_img_unactive = Info.primary_img_unactive
 
         # Secondary weapon info
         secondary_lag = ammo[plane.secondary_weapon]['lag']
         time_since_secondary = stopwatch.mill - plane.last_shot_secondary
-        secondary_img_active = UpperInfo.secondary_img_active
-        secondary_img_unactive = UpperInfo.secondary_img_unactive
+        secondary_img_active = Info.secondary_img_active
+        secondary_img_unactive = Info.secondary_img_unactive
 
         if plane.active_weapon == plane.primary_weapon:
             self.screen.blit(primary_img_active, (self.primary_x, self.primary_y))
@@ -456,11 +457,19 @@ class UpperInfo:
         self.screen.blit(textSurface, textRect)
         self.screen.blit(textSurface2, textRect2)
 
+    def blit_pause(self):
+        textSurface = self.font.render(('PAUSED'), True, d_bluec)
+        textRect = textSurface.get_rect()
+        textRect.center = (display_width/2,display_height/3)
+        self.screen.blit(textSurface, textRect)
+
     def blit(self, plane, stopwatch):
         self.blit_bullet_icons(plane, stopwatch)
         self.blit_heart()
         self.blit_lives(plane)
         self.blit_ammo(plane)
+        if self.pause == True:
+            self.blit_pause()
 
 class Gameplay:
     def __init__(self):
@@ -471,6 +480,7 @@ class Gameplay:
         self.remaining_enemies = 0
         self.score = 0
         self.spawned = False
+        self.gameover = False
 
     def next_wave(self):
         self.wave_nr += 1
@@ -479,6 +489,38 @@ class Gameplay:
 
     def addInfo(self, enemies):
         self.enemies = enemies
+
+    def check_if_game_over(self):
+        return self.gameover
+
+    def pause(self, keyboard, info):
+        info.pause = True
+        info.blit_pause()
+        pygame.display.update()
+        p_down = 2
+        while p_down > 0:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_p:
+                        p_down -= 1
+                        info.pause = False
+                    if event.key == pygame.K_DOWN:
+                        keyboard.down = False
+                    if event.key == pygame.K_UP:
+                        keyboard.up = False
+                    if event.key == pygame.K_LEFT:
+                        keyboard.left = False
+                    if event.key == pygame.K_RIGHT:
+                        keyboard.right = False
+                    if event.key == pygame.K_SPACE:
+                        keyboard.space = False
+                    if event.key == pygame.K_c:
+                        keyboard.c = False
+                    if event.key == pygame.K_x:
+                        keyboard.x = False
 
     def spawn(self):
         if self.spawned == False:
@@ -504,3 +546,4 @@ class Gameplay:
                 self.next_wave()
             else:
                 print("You have completed the game!")
+                self.gameover = True

@@ -28,8 +28,9 @@ def game_loop():
     plane.reset()
     stopwatch.reset()
     """"""""""""""""""""""""""""""""""""""""""
+    gameover = False
 
-    while True:
+    while not gameover:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -52,6 +53,8 @@ def game_loop():
                 if event.key == pygame.K_x:
                     plane.swap_single()
                     keyboard.x = True
+                if event.key == pygame.K_p:
+                    gameplay.pause(keyboard, info)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     keyboard.down = False
@@ -71,8 +74,8 @@ def game_loop():
         # Render moving background
         background.blit()
 
-        """ UPPER INFO PANEL """
-        upperInfo.blit(plane, stopwatch)
+        """ INFO PANEL AND OTHER INFORMATION"""
+        info.blit(plane, stopwatch)
         """"""""""""""""""""""""
 
 
@@ -108,6 +111,7 @@ def game_loop():
         """ GAMEPLAY """
         gameplay.addInfo(enemies)
         gameplay.spawn()
+        gameover = gameplay.check_if_game_over()
         """"""""""""""
 
 
@@ -116,6 +120,7 @@ def game_loop():
         clock.tick(60)
         pygame.display.update()
         """"""""""""
+
 
 # Starts the main loop and resets all variables to default
 game_loop()
