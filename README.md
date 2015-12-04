@@ -1,0 +1,1 @@
+This is a small Python game. Its main goal is to shoot down enemies and pass upcoming waves. 
