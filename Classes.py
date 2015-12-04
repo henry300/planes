@@ -23,13 +23,33 @@ class Plane:
         self.primary_ammo = 100
         self.secondary_ammo = 10
         self.active_weapon = "bullet_1"
+        self.time = None
         self.single = False
+        self.effectsdict = {}
+
+    def addInfo(self, stopwatch):
+        self.time = stopwatch.sec
 
     def swap_weapon(self):
         if self.active_weapon == self.primary_weapon:
             self.active_weapon = self.secondary_weapon
         else:
             self.active_weapon = self.primary_weapon
+
+    def effects(self):
+        if 'shake' in self.effectsdict:
+            if self.time - self.effectsdict['shake'] < 1:
+                dt = round(self.time - self.effectsdict['shake'], 1) * 10
+                if dt % 2 == 0:
+                    self.y += 2
+                else:
+                    self.y -= 2
+            else:
+                del self.effectsdict['shake']
+
+    def shake(self):
+        if 'shake' not in self.effectsdict:
+            self.effectsdict['shake'] = self.time
 
     def swap_single(self):
         if self.active_weapon == self.primary_weapon:
@@ -178,6 +198,13 @@ class Enemies:
                     enemy.lives -= bullet.damage
                     bullets.active_bullets.remove(bullet)
 
+    def check_user_col(self, plane):
+        for enemy in self.enemies:
+            if enemy.x <= plane.x + 100 and enemy.x >= plane.x and enemy.y >= plane.y - 20 and enemy.y <= plane.y + 70 and enemy.status == 'flying':
+                plane.lives -= 50
+                plane.shake()
+                enemy.lives = 0
+
     def remove_offscreen(self):
         for enemy in self.enemies:
             if enemy.x < -100:
@@ -210,14 +237,13 @@ class Enemies:
                     enemy.dy = 0
             elif enemy.status != 'wrecked':
 
-
                 # SIN_PASSING_SLOW
                 if enemy.style == 'sin_passing_slow':
                     enemy.y += 1 * sin(enemy.x * 0.01)
                     enemy.dx = -2
 
                 # MOVING STRAIGHT
-                if enemy.style == 'moving_straight':
+                elif enemy.style == 'moving_straight':
                     enemy.dx = -2
                     enemy.dy = 0
 
@@ -244,9 +270,9 @@ class Enemies:
                         enemy.movePhase = 1
                         enemy.x += cos(enemy.y * 0.05)
                         enemy.dy = sin(self.stopwatch.sec * 0.5)
-
-
-
+                else:
+                    print("No such moving style: ", enemy.style)
+                    self.gameplay.gameover = True
 
     def calc_pos(self, plane):
         self.calc_delta(plane)
@@ -261,7 +287,6 @@ class Enemies:
             y = enemy.y - enemy.y_off + 130
             pygame.draw.rect(self.screen, red, (x,y,100*1.5,5))
             pygame.draw.rect(self.screen, green, (x,y,(enemy.lives / enemy.max_lives * 100)*1.5,5))
-
 
     @staticmethod
     def info(type, property):
@@ -437,7 +462,6 @@ class Info:
         self.font = pygame.font.Font("/Library/Fonts/MyriadPro-Bold.otf", 40)
         self.pause = False
 
-
     def blit_bullet_icons(self, plane, stopwatch):
 
         # Primary weapon info
@@ -452,6 +476,7 @@ class Info:
         secondary_img_active = Info.secondary_img_active
         secondary_img_unactive = Info.secondary_img_unactive
 
+        # Show weapon images accordingly to active weapon status
         if plane.active_weapon == plane.primary_weapon:
             self.screen.blit(primary_img_active, (self.primary_x, self.primary_y))
             self.screen.blit(secondary_img_unactive, (self.secondary_x, self.secondary_y))
@@ -459,6 +484,7 @@ class Info:
             self.screen.blit(primary_img_unactive, (self.primary_x, self.primary_y))
             self.screen.blit(secondary_img_active, (self.secondary_x, self.secondary_y))
 
+        # Calculate and blit loading bars
         if time_since_primary >= primary_lag or plane.last_shot_primary == 0:
             load_percent_primary = 1
         else:
@@ -528,7 +554,6 @@ class Gameplay:
         self.enemies = enemies
         self.plane = plane
         self.bonusBoxes = bonusBoxes
-        print(self.score)
 
     def check_if_game_over(self):
         if self.plane.lives <= 0:
@@ -588,9 +613,6 @@ class Gameplay:
                             self.bonusBoxes.add(object[0], x, object[1])
 
 
-
-
-
             self.spawned = True
 
         if self.remaining_enemies == 0:
@@ -599,3 +621,5 @@ class Gameplay:
             else:
                 print("You have completed the game!")
                 self.gameover = True
+
+

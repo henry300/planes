@@ -5,19 +5,21 @@ Tartu Ülikool 2015
 """
 
 """ TODO """
-# Bullet image degree calculation
 # Enemy and user collision
 # Shooting enemies
 # Bonus boxes
+# New weapon boxes
 # Much more moving styles
-# Proper gameplay
 # Show score
 # Show wave nr
 # Start screen
 # Possibility to start over
+# Bullet image degree calculation
+# Proper gameplay
 """"""""""""
 
 from init import *
+
 
 
 def game_loop():
@@ -29,6 +31,8 @@ def game_loop():
     stopwatch.reset()
     """"""""""""""""""""""""""""""""""""""""""
     gameover = False
+
+
 
     while not gameover:
         for event in pygame.event.get():
@@ -82,11 +86,13 @@ def game_loop():
         """ USER PLANE """
         plane.calc_degree(keyboard)
         plane.calc_pos(keyboard)
+        plane.addInfo(stopwatch)
+        plane.effects()
         plane.blit()
         """"""""""""""""""
 
 
-        """ FIRE FROM USER WEAPON WHEN NECCESSAŖY """
+        """ FIRE FROM USER WEAPON WHEN NECCESSAŖY c"""
         if keyboard.space:
             plane.fire(keyboard, stopwatch, bullets)
         """"""""""""""""""""""""""""""""""""""""""
@@ -103,13 +109,20 @@ def game_loop():
         enemies.calc_pos(plane)
         enemies.addInfo(gameplay, stopwatch)
         enemies.check_bullet_col(bullets)
+        enemies.check_user_col(plane)
         enemies.remove_offscreen()
         enemies.blit()
         """"""""""""""
 
 
+        """ BONUSBOXES """
+        bonusBoxes.calc_pos()
+        bonusBoxes.blit()
+        """"""""""""""""""
+
+
         """ GAMEPLAY """
-        gameplay.addInfo(enemies)
+        gameplay.addInfo(enemies, plane, bonusBoxes)
         gameplay.spawn()
         gameover = gameplay.check_if_game_over()
         """"""""""""""
