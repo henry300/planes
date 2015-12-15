@@ -273,9 +273,31 @@ class Enemies:
                         enemy.movePhase = 1
                         enemy.x += cos(enemy.y * 0.05)
                         enemy.dy = sin(self.stopwatch.sec * 0.5)
+
+                # APPROACHING_FOLLOWING
+                elif enemy.style == 'approaching_following':
+
+                    # Simulate dx = 1.5
+                    if enemy.dx == -2:
+                        enemy.dx = -1
+                    else:
+                        enemy.dx = -2
+
+                    # Follow plane y coordinate
+                    if abs(enemy.y - plane.y - 50) >= 20:
+                        if enemy.y - (plane.y + 50) < 0:
+                            enemy.dy = 1
+                        else:
+                            enemy.dy = -1
+                    else:
+                        enemy.dy = 0
+
                 else:
                     print("No such moving style: ", enemy.style)
                     self.gameplay.gameover = True
+
+
+
 
     def calc_pos(self, plane):
         self.calc_delta(plane)
