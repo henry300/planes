@@ -23,7 +23,7 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
-        self.primary_ammo = 10
+        self.primary_ammo = 100
         self.secondary_ammo = 0
         self.active_weapon = "bullet_1"
         self.time = None
@@ -534,9 +534,23 @@ class Info:
         textRect.center = (display_width/2,display_height/3)
         self.screen.blit(textSurface, textRect)
 
-    def blit(self, plane, stopwatch):
+    def blit_score(self, score):
+        textSurface = self.font.render("Score: " + str(score), True, white)
+        textRect = textSurface.get_rect()
+        textRect.center = (self.primary_x + 950 + textRect.width/2, self.heart_y + 55)
+        self.screen.blit(textSurface, textRect)
+
+    def blit_wave_nr(self, wave_nr):
+        textSurface = self.font.render("Wave: " + str(wave_nr+1), True, white)
+        textRect = textSurface.get_rect()
+        textRect.center = (self.primary_x + 750 + textRect.width/2, self.heart_y + 55)
+        self.screen.blit(textSurface, textRect)
+
+    def blit(self, plane, stopwatch, gameplay):
         self.blit_bullet_icons(plane, stopwatch)
         self.blit_heart()
+        self.blit_score(gameplay.score)
+        self.blit_wave_nr(gameplay.wave_nr)
         self.blit_lives(plane)
         self.blit_ammo(plane)
         if self.pause == True:
@@ -563,8 +577,8 @@ class Gameplay:
 
     def checkAmmo(self, plane, bullets):
         if plane.primary_ammo + plane.secondary_ammo == 0 and bullets.active_user_bullets == 0:
-            plane.primary_ammo += mat.arva()
-
+            return
+            # plane.primary_ammo += mat.arva()
 
 
     def addInfo(self, enemies, plane, bonusBoxes, keyboard, info):
