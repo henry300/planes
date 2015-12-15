@@ -32,8 +32,8 @@ right_speed = 3
 ammo = {
     'bullet_1' : {
         'speed' : 10,
-        'damage': 20,
-        'lag'   : 7,
+        'damage': 10,
+        'lag'   : 3,
         'single': False,
         'x_off' : 7,          # Distance between bullet and png edge horizontally
         'y_off' : 17,         # Distance between bullet and png edge vertically
@@ -46,7 +46,7 @@ ammo = {
     },
     'missile_1' : {
         'speed' : 10,
-        'damage': 50,
+        'damage': 200,
         'lag'   : 50,
         'single': False,
         'x_off' : 7,
@@ -61,13 +61,33 @@ ammo = {
 enemy_info = {
     'blue_heli' : {
         'max_lives' : 100,
-        'ammo'  : None,
         'image' : "images/blue_heli.png",
         'wrecked_image' : "images/blue_heli_wrecked.png",
         'x_off': 60,
         'y_off': 70,
+        'lives_x_off': 0,
+        'lives_y_off': 130,
+        'weapon_pos_x': 0,
+        'weapon_pos_y': 0,
+        'ammo'  : None,
+        'shooting_resttime' : 0,
         'height' : 110,
         'value' : 50
+    },
+    'green_heli' : {
+        'max_lives' : 200,
+        'image' : "images/enemy2.png",
+        'wrecked_image' : "images/enemy2.png",
+        'x_off': 60,
+        'y_off': 121,
+        'lives_x_off': 25,
+        'lives_y_off': 160,
+        'weapon_pos_x': -10,
+        'weapon_pos_y': 22,
+        'ammo'  : 'bullet_1',
+        'shooting_resttime' : 4,
+        'height' : 66,
+        'value' : 198
     }
 }
 
@@ -75,8 +95,9 @@ enemy_info = {
 bonus_boxes_info = {
     'bullet_1_10' : {
         'type' : 'ammo',
+        'reference' : 'bullet_1',
         'addition' : 10,
-        'image' : "images/bullet_1_10.png",
+        'image' : "images/primary_active.png",
         'x_off': 60,
         'y_off': 70,
     }
