@@ -23,7 +23,7 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
-        self.primary_ammo = 100
+        self.primary_ammo = 1000
         self.secondary_ammo = 0
         self.active_weapon = "bullet_1"
         self.time = None
@@ -286,8 +286,8 @@ class Enemies:
 
     def blit_lives(self, enemy):
         if enemy.lives > 0:
-            x = enemy.x - enemy.x_off
-            y = enemy.y - enemy.y_off + 130
+            x = enemy.x - enemy.x_off + enemy.lives_x_off
+            y = enemy.y - enemy.y_off + enemy.lives_y_off
             pygame.draw.rect(self.screen, red, (x,y,100*1.5,5))
             pygame.draw.rect(self.screen, green, (x,y,(enemy.lives / enemy.max_lives * 100)*1.5,5))
 
@@ -301,8 +301,14 @@ class Enemy:
         self.y = y
         self.dx = 0
         self.dy = 0
+        self.degree = 0
         self.x_off = Enemies.info(type, 'x_off')
         self.y_off = Enemies.info(type, 'y_off')
+        self.lives_y_off = Enemies.info(type, 'lives_y_off')
+        self.lives_x_off = Enemies.info(type, 'lives_x_off')
+        self.weapon_pos_x = Enemies.info(type, 'weapon_pos_x')
+        self.weapon_pos_y = Enemies.info(type, 'weapon_pos_y')
+        self.ammo = Enemies.info(type, 'ammo')
         self.height = Enemies.info(type, 'height')
         self.status = 'flying'
         self.style = style
@@ -312,6 +318,14 @@ class Enemy:
         self.lives = self.max_lives
         self.image = pygame.image.load(Enemies.info(type, 'image'))
         self.movePhase = 0
+
+    def weapon_pos(self):
+        return self.x + self.weapon_pos_x, self.y + self.weapon_pos_y
+
+    def fire(self, bullets):
+        if self.ammo != None:
+            bullet = Bullet(self, self.ammo)
+            bullets.add(bullet)
 
     def destroy(self, gameplay):
         self.status = 'wrecked'
