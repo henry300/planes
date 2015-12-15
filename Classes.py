@@ -537,13 +537,13 @@ class Info:
     def blit_score(self, score):
         textSurface = self.font.render("Score: " + str(score), True, white)
         textRect = textSurface.get_rect()
-        textRect.center = (self.primary_x + 950 + textRect.width/2, self.heart_y + 55)
+        textRect.center = (self.primary_x + 900 + textRect.width/2, self.heart_y + 55)
         self.screen.blit(textSurface, textRect)
 
     def blit_wave_nr(self, wave_nr):
         textSurface = self.font.render("Wave: " + str(wave_nr+1), True, white)
         textRect = textSurface.get_rect()
-        textRect.center = (self.primary_x + 750 + textRect.width/2, self.heart_y + 55)
+        textRect.center = (self.primary_x + 700 + textRect.width/2, self.heart_y + 55)
         self.screen.blit(textSurface, textRect)
 
     def blit(self, plane, stopwatch, gameplay):
