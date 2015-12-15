@@ -1,8 +1,8 @@
-from math import *
 from random import randint
 from tkinter import *
 from tkinter import ttk
-import time
+init = Tk()
+init.destroy()
 
 class Raam:
     def __init__(self):
@@ -68,9 +68,9 @@ class arvamismang:
             hindaja = ttk.Label(self.raam, text = "ÕIGE! ", font=("Calibri", 25), foreground = "#00AA00")
             if self.skoor < self.max_kuulid:
                 if type(self.oige) == int:
-                    self.skoor += 5
+                    self.skoor += 15
                 else:
-                    self.skoor += 10
+                    self.skoor += 20
         else:
             hindaja = ttk.Label(self.raam, text = "VALE!", font=("Calibri", 25), foreground = "#AA0000")
             if self.skoor == 0:
@@ -197,3 +197,5 @@ def arva():
     mang.render_welcome_screen()
     mang.start_loop()
     return mang.skoor
+
+

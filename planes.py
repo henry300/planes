@@ -5,7 +5,7 @@ Tartu Ülikool 2015
 """
 
 """ TODO """
-# Enemy and user collision
+# Seo mänguga mironi osa®
 # Shooting enemies
 # Bonus boxes
 # New weapon boxes
@@ -122,7 +122,8 @@ def game_loop():
 
 
         """ GAMEPLAY """
-        gameplay.addInfo(enemies, plane, bonusBoxes)
+        gameplay.addInfo(enemies, plane, bonusBoxes, keyboard, info)
+        gameplay.checkAmmo(plane, bullets)
         gameplay.spawn()
         gameover = gameplay.check_if_game_over()
         """"""""""""""

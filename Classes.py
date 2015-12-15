@@ -2,7 +2,10 @@ from settings import *
 from plot import *
 from math import *
 from random import *
+import mat
 import pygame
+
+
 pygame.init()
 
 class Plane:
@@ -20,8 +23,8 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
-        self.primary_ammo = 100
-        self.secondary_ammo = 10
+        self.primary_ammo = 10
+        self.secondary_ammo = 0
         self.active_weapon = "bullet_1"
         self.time = None
         self.single = False
@@ -196,7 +199,7 @@ class Enemies:
             for bullet in bullets.active_bullets:
                 if bullet.x >= enemy.x and bullet.y <= (enemy.y + enemy.height/2) and bullet.y >= (enemy.y - enemy.height/2) and enemy.status != 'wrecked':
                     enemy.lives -= bullet.damage
-                    bullets.active_bullets.remove(bullet)
+                    bullets.remove(bullet)
 
     def check_user_col(self, plane):
         for enemy in self.enemies:
@@ -319,6 +322,7 @@ class Bullets:
     def __init__(self, screen):
         self.total_count = 0
         self.active_count = 0
+        self.active_user_bullets = 0
         self.screen = screen
         self.active_bullets = []
 
@@ -326,10 +330,14 @@ class Bullets:
         self.active_bullets.append(bullet)
         self.total_count += 1
         self.active_count += 1
+        if bullet.origin.type == "user":
+            self.active_user_bullets += 1
 
     def remove(self, bullet):
         self.active_bullets.remove(bullet)
         self.active_count -= 1
+        if bullet.origin.type == "user":
+            self.active_user_bullets -= 1
 
     def remove_offscreen(self):
         for bullet in self.active_bullets:
@@ -443,6 +451,7 @@ class Stopwatch:
     def reset(self):
         self.__init__()
 
+# All visible info. Like active weapon, score etc
 class Info:
 
     primary_img_active = pygame.image.load(ammo['bullet_1']['bullet_icon_active'])
@@ -540,20 +549,30 @@ class Gameplay:
         self.wave = self.plot[0]
         self.total_waves = len(self.plot)
         self.remaining_enemies = 0
+        self.keyboard = ''
         self.score = 0
         self.spawned = False
         self.gameover = False
         self.gameover_reason = ''
+        self.info = ''
 
     def next_wave(self):
         self.wave_nr += 1
         self.wave = plot[self.wave_nr]
         self.spawned = False
 
-    def addInfo(self, enemies, plane, bonusBoxes):
+    def checkAmmo(self, plane, bullets):
+        if plane.primary_ammo + plane.secondary_ammo == 0 and bullets.active_user_bullets == 0:
+            plane.primary_ammo += mat.arva()
+
+
+
+    def addInfo(self, enemies, plane, bonusBoxes, keyboard, info):
         self.enemies = enemies
         self.plane = plane
         self.bonusBoxes = bonusBoxes
+        self.keyboard = keyboard
+        self.info = info
 
     def check_if_game_over(self):
         if self.plane.lives <= 0:
@@ -561,6 +580,7 @@ class Gameplay:
             self.gameover = True
 
         return self.gameover
+
 
     def pause(self, keyboard, info):
         info.pause = True
