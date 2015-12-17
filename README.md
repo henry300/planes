@@ -1,12 +1,12 @@
-This is a small Python game. Its main goal is to shoot down enemies and pass upcoming waves.
+This is a small Python game. Its main goal is to shoot down enemies and pass upcoming waves.<br><br>
 
-Controls:
+Controls:<br><br>
 
-Shoot               - Space
-Change weapon       - C
-Toggle single shot  - X
-Pause               - P
-Move Up             - Up arrow
-Move Down           - Down arrow
-Move Left           - Left arrow
-Move Right          - Right arrow
+Shoot               - Space<br>
+Change weapon       - C<br>
+Toggle single shot  - X<br>
+Pause               - P<br>
+Move Up             - Up arrow<br>
+Move Down           - Down arrow<br>
+Move Left           - Left arrow<br>
+Move Right          - Right arrow<br>
