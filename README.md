@@ -2,11 +2,11 @@ This is a small Python game. Its main goal is to shoot down enemies and pass upc
 
 Controls:<br><br>
 
-Shoot               - Space<br>
-Change weapon       - C<br>
-Toggle single shot  - X<br>
-Pause               - P<br>
-Move Up             - Up arrow<br>
-Move Down           - Down arrow<br>
-Move Left           - Left arrow<br>
-Move Right          - Right arrow<br>
+Shoot               - <b>Space</b><br>
+Change weapon       - <b>C</b><br>
+Toggle single shot  - <b>X</b><br>
+Pause               - <b>P</b><br>
+Move Up             - <b>Up arrow</b><br>
+Move Down           - <b>Down arrow</b><br>
+Move Left           - <b>Left arrow</b><br>
+Move Right          - <b>Right arrow</b><br>
