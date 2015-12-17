@@ -222,7 +222,11 @@ def highscores():
         TextSurf, TextRect = text_objects("Highscores", largeText)
 
         for nr, score in enumerate(scores):
-            TextSurf2, TextRect2 = text_objects(str(score), largeText2, (16,110,170))
+            TextSurf3, TextRect3 = text_objects("#"+str(nr+1), largeText2, (8,90,130))
+            TextRect3.center = ((540),(160 + int(nr)*45))
+            screen.blit(TextSurf3, TextRect3)
+
+            TextSurf2, TextRect2 = text_objects(str(score), largeText2, (8,90,130))
             TextRect2.center = ((display_width/2),(160 + int(nr)*45))
             screen.blit(TextSurf2, TextRect2)
 
