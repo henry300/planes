@@ -29,10 +29,12 @@ class Plane:
         self.active_weapon = "bullet_1"
         self.time = None
         self.single = False
+        self.gameplay = None
         self.effectsdict = {}
 
-    def addInfo(self, stopwatch):
+    def addInfo(self, stopwatch, gameplay):
         self.time = stopwatch.sec
+        self.gameplay = gameplay
 
     def check_bullet_col(self, bullets):
         for bullet in bullets.active_bullets:
@@ -132,6 +134,8 @@ class Plane:
         else:
             self.image_surf = pygame.image.load("images/plane_wrecked.png")
             self.x -= bg_speed
+            if self.x < -100:
+                self.gameplay.gameover = True
 
 
     def weapon_pos(self):
@@ -350,6 +354,9 @@ class Enemies:
             pygame.draw.rect(self.screen, red, (x,y,100*1.5,5))
             pygame.draw.rect(self.screen, green, (x,y,(enemy.lives / enemy.max_lives * 100)*1.5,5))
 
+    def reset(self, screen):
+        self.__init__(screen)
+
     @staticmethod
     def info(type, property):
         return enemy_info[type][property]
@@ -453,6 +460,9 @@ class Bullets:
                 direction = -1
             bullet.x += direction * dx
             bullet.y += direction * dy
+
+    def reset(self, screen):
+        self.__init__(screen)
 
     def blit(self):
         for bullet in self.active_bullets:
@@ -693,12 +703,7 @@ class Gameplay:
         self.info = info
 
     def check_if_game_over(self):
-        # if self.plane.lives <= 0:
-        #     self.gameover_reason = "You got destroyed!"
-        #     self.gameover = True
-        #
-        # return self.gameover
-        return False
+        return self.gameover
 
 
     def pause(self, keyboard, info):
@@ -760,5 +765,8 @@ class Gameplay:
             else:
                 print("You have completed the game!")
                 self.gameover = True
+
+    def reset(self):
+        self.__init__()
 
 

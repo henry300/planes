@@ -28,6 +28,27 @@ Tartu Ülikool 2015
 from init import *
 
 
+def game_intro():
+
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        screen.blit(pygame.image.load("images/background.png"), (0,0))
+        largeText = pygame.font.SysFont("comicsansms",115)
+        TextSurf, TextRect = text_objects("Planes", largeText)
+        TextRect.center = ((display_width/2),(100))
+        screen.blit(TextSurf, TextRect)
+
+        button("Play",display_width/2 - 125,190,250,50,(0,150,0),(0,200,0),game_loop)
+        button("Highscores",display_width/2 - 125,250,250,50,(0,150,0),(0,200,0),game_loop)
+        button("Quit",display_width/2 - 125,310,250,50,(150,0,0),(200,0,0),exit)
+        pygame.display.update()
+        clock.tick(15)
 
 def game_loop():
     pygame.event.clear()
@@ -36,9 +57,11 @@ def game_loop():
     keyboard.reset()
     plane.reset()
     stopwatch.reset()
+    gameplay.reset()
+    enemies.reset(screen)
+    bullets.reset(screen)
     """"""""""""""""""""""""""""""""""""""""""
     gameover = False
-
 
 
     while not gameover:
@@ -89,11 +112,17 @@ def game_loop():
         info.blit(plane, stopwatch, gameplay)
         """"""""""""""""""""""""
 
+        """ CALCULATE AND RENDER VISIBLE BULLETS"""
+        bullets.calc_pos()
+        bullets.remove_offscreen()
+        bullets.blit()
+        """"""""""""""""""""""""""""""
 
         """ USER PLANE """
         plane.calc_degree(keyboard)
         plane.calc_pos(keyboard)
-        plane.addInfo(stopwatch)
+        plane.addInfo(stopwatch, gameplay)
+        plane.check_bullet_col(bullets)
         plane.effects()
         plane.blit()
         """"""""""""""""""
@@ -103,13 +132,6 @@ def game_loop():
         if keyboard.space:
             plane.fire(keyboard, stopwatch, bullets)
         """"""""""""""""""""""""""""""""""""""""""
-
-
-        """ CALCULATE AND RENDER VISIBLE BULLETS"""
-        bullets.calc_pos()
-        bullets.remove_offscreen()
-        bullets.blit()
-        """"""""""""""""""""""""""""""
 
 
         """ ENEMIES """
@@ -143,6 +165,15 @@ def game_loop():
         pygame.display.update()
         """"""""""""
 
+    game_intro()
+
+def exit():
+    pygame.quit()
+    quit()
+
 
 # Starts the main loop and resets all variables to default
-game_loop()
+game_intro()
+
+
+print(gameplay.gameover_reason)
