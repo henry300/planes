@@ -1,5 +1,6 @@
 from settings import *
 from Classes import *
+import time
 from math import *
 from random import *
 
@@ -33,8 +34,8 @@ right_arrow = False
 space = False
 c_but = False
 
-def text_objects(text, font):
-    textSurface = font.render(text, True, (255,255,255))
+def text_objects(text, font, color = (255,255,255)):
+    textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
 def button(msg,x,y,w,h,ic,ac,action=None):

@@ -27,29 +27,6 @@ Tartu Ülikool 2015
 
 from init import *
 
-
-def game_intro():
-
-    intro = True
-
-    while intro:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-
-        screen.blit(pygame.image.load("images/background.png"), (0,0))
-        largeText = pygame.font.SysFont("comicsansms",115)
-        TextSurf, TextRect = text_objects("Planes", largeText)
-        TextRect.center = ((display_width/2),(100))
-        screen.blit(TextSurf, TextRect)
-
-        button("Play",display_width/2 - 125,190,250,50,(0,150,0),(0,200,0),game_loop)
-        button("Highscores",display_width/2 - 125,250,250,50,(0,150,0),(0,200,0),game_loop)
-        button("Quit",display_width/2 - 125,310,250,50,(150,0,0),(200,0,0),exit)
-        pygame.display.update()
-        clock.tick(15)
-
 def game_loop():
     pygame.event.clear()
 
@@ -165,7 +142,57 @@ def game_loop():
         pygame.display.update()
         """"""""""""
 
-    game_intro()
+    ending_screen(gameplay.score)
+
+
+def game_intro():
+
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        screen.blit(pygame.image.load("images/background.png"), (0,0))
+        largeText = pygame.font.SysFont("comicsansms",115)
+        TextSurf, TextRect = text_objects("Planes", largeText)
+        TextRect.center = ((display_width/2),(100))
+        screen.blit(TextSurf, TextRect)
+
+        button("Play",display_width/2 - 125,190,250,50,(8,81,127),(16,110,170),game_loop)
+        button("Highscores",display_width/2 - 125,250,250,50,(8,81,127),(16,110,170),game_loop)
+        button("Quit",display_width/2 - 125,310,250,50,(153,37,37),(185,48,48),exit)
+        pygame.display.update()
+        clock.tick(15)
+
+def ending_screen(score):
+
+    ending_screen = True
+
+    while ending_screen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        screen.blit(pygame.image.load("images/background.png"), (0,0))
+        largeText = pygame.font.SysFont("comicsansms",115)
+        largeText2 = pygame.font.SysFont("comicsansms",80)
+
+        TextSurf, TextRect = text_objects("Game over!", largeText, (8,81,127))
+        TextSurf2, TextRect2 = text_objects("Score: " + str(score), largeText2, (16,110,170))
+
+        TextRect.center = ((display_width/2),(240))
+        TextRect2.center = ((display_width/2),(300))
+        screen.blit(TextSurf, TextRect)
+        screen.blit(TextSurf2, TextRect2)
+
+        button("OK!",display_width/2 -75,360,150,50,(8,81,127),(16,110,170),game_intro)
+        pygame.display.update()
+        clock.tick(15)
+
 
 def exit():
     pygame.quit()
