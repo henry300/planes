@@ -35,20 +35,6 @@ ammo = {
     'bullet_1' : {
         'speed' : 10,
         'damage': 10,
-        'lag'   : 3,
-        'single': False,
-        'x_off' : 7,          # Distance between bullet and png edge horizontally
-        'y_off' : 17,         # Distance between bullet and png edge vertically
-        'bullet_image' : "images/bullet.png",
-        'bullet_icon_active'  : "images/primary_active.png",
-        'bullet_icon_unactive'  : "images/primary_unactive.png",
-        'bullet_icon_active_single' : "images/primary_active_single.png",
-        'bullet_icon_unactive_single' : "images/primary_unactive_single.png",
-
-    },
-    'bullet_1_enemy' : {
-        'speed' : 10,
-        'damage': 10,
         'lag'   : 10,
         'single': False,
         'x_off' : 7,          # Distance between bullet and png edge horizontally
@@ -58,11 +44,36 @@ ammo = {
         'bullet_icon_unactive'  : "images/primary_unactive.png",
         'bullet_icon_active_single' : "images/primary_active_single.png",
         'bullet_icon_unactive_single' : "images/primary_unactive_single.png",
-
+    },
+    'bullet_1_slow' : {
+        'speed' : 10,
+        'damage': 10,
+        'lag'   : 15,
+        'single': False,
+        'x_off' : 7,          # Distance between bullet and png edge horizontally
+        'y_off' : 17,         # Distance between bullet and png edge vertically
+        'bullet_image' : "images/bullet.png",
+        'bullet_icon_active'  : "images/primary_active.png",
+        'bullet_icon_unactive'  : "images/primary_unactive.png",
+        'bullet_icon_active_single' : "images/primary_active_single.png",
+        'bullet_icon_unactive_single' : "images/primary_unactive_single.png",
+    },
+    'bullet_1_fast' : {
+        'speed' : 10,
+        'damage': 10,
+        'lag'   : 7,
+        'single': False,
+        'x_off' : 7,          # Distance between bullet and png edge horizontally
+        'y_off' : 17,         # Distance between bullet and png edge vertically
+        'bullet_image' : "images/bullet.png",
+        'bullet_icon_active'  : "images/primary_active.png",
+        'bullet_icon_unactive'  : "images/primary_unactive.png",
+        'bullet_icon_active_single' : "images/primary_active_single.png",
+        'bullet_icon_unactive_single' : "images/primary_unactive_single.png",
     },
     'missile_1' : {
         'speed' : 10,
-        'damage': 200,
+        'damage': 100,
         'lag'   : 50,
         'single': False,
         'x_off' : 7,
@@ -94,7 +105,7 @@ enemy_info = {
         'value' : 50
     },
     'green_heli' : {
-        'max_lives' : 170,
+        'max_lives' : 180,
         'image' : "images/enemy2.png",
         'wrecked_image' : "images/enemy2_wrecked.png",
         'x_off': 60,
@@ -103,11 +114,43 @@ enemy_info = {
         'lives_y_off': 160,
         'weapon_pos_x': -10,
         'weapon_pos_y': 22,
-        'ammo'  : 'bullet_1_enemy',
+        'ammo'  : 'bullet_1_slow',
         'shooting_resttime' : 2,
         'shooting_duration' : 2,
         'height' : 66,
         'value' : 100
+    },
+    'green_heli_rockets' : {
+        'max_lives' : 180,
+        'image' : "images/enemy2.png",
+        'wrecked_image' : "images/enemy2_wrecked.png",
+        'x_off': 60,
+        'y_off': 121,
+        'lives_x_off': 25,
+        'lives_y_off': 160,
+        'weapon_pos_x': -10,
+        'weapon_pos_y': 22,
+        'ammo'  : 'missile_1',
+        'shooting_resttime' : 2,
+        'shooting_duration' : 2,
+        'height' : 66,
+        'value' : 150
+    },
+    'green_heli_enhanced' : {
+        'max_lives' : 180,
+        'image' : "images/enemy2.png",
+        'wrecked_image' : "images/enemy2_wrecked.png",
+        'x_off': 60,
+        'y_off': 121,
+        'lives_x_off': 25,
+        'lives_y_off': 160,
+        'weapon_pos_x': -10,
+        'weapon_pos_y': 22,
+        'ammo'  : 'bullet_1_fast',
+        'shooting_resttime' : 2,
+        'shooting_duration' : 2,
+        'height' : 66,
+        'value' : 170
     }
 }
 

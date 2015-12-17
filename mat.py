@@ -49,7 +49,7 @@ class arvamismang:
         self.inglise_k = []
         self.eesti_k = []
         self.sona_ekraanile = ''
-        self.max_kuulid = 50
+        self.max_kuulid = 200
 
     def lõpeta_mäng(self):
         print('tra')
@@ -68,9 +68,9 @@ class arvamismang:
             hindaja = ttk.Label(self.raam, text = "ÕIGE! ", font=("Calibri", 25), foreground = "#00AA00")
             if self.skoor < self.max_kuulid:
                 if type(self.oige) == int:
-                    self.skoor += 15
+                    self.skoor += 5
                 else:
-                    self.skoor += 20
+                    self.skoor += 10
         else:
             hindaja = ttk.Label(self.raam, text = "VALE!", font=("Calibri", 25), foreground = "#AA0000")
             if self.skoor == 0:
@@ -197,5 +197,3 @@ def arva():
     mang.render_welcome_screen()
     mang.start_loop()
     return mang.skoor
-
-

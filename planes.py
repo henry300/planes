@@ -8,18 +8,13 @@ Tartu Ülikool 2015
 # Bonus boxes
 # New weapon boxes
 # Much more moving styles
-# Start screen
-# Possibility to start over
 # Bullet image degree calculation
 # Proper gameplay
-# Menus
-# Highscore
 # Make exe or atleast mac file from the project
 
 
-
 # KNOWN BUGS AND NEEDED FIXES
-
+# LINE COUNT 1556
 #1  User and enemy collision - x coordinate is fixed and so collision point is wrong
 #2  Ammo variable name is not consistent
 

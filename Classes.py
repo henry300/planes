@@ -5,7 +5,6 @@ from random import *
 import mat
 import pygame
 
-
 pygame.init()
 
 class Plane:
@@ -15,8 +14,8 @@ class Plane:
         self.x = 50
         self.y = display_height / 2 - 100
         self.degree = 0
-        self.max_lives = 50
-        self.lives = 50
+        self.max_lives = 700
+        self.lives = 700
         self.last_shot_primary = 0
         self.last_shot_secondary = 0
         self.type = "user"
@@ -24,8 +23,8 @@ class Plane:
         self.fired_secondary = 0
         self.primary_weapon = "bullet_1"
         self.secondary_weapon = "missile_1"
-        self.primary_ammo = 1000
-        self.secondary_ammo = 0
+        self.primary_ammo = 120
+        self.secondary_ammo = 5
         self.active_weapon = "bullet_1"
         self.time = None
         self.single = False
@@ -137,7 +136,6 @@ class Plane:
             if self.x < -100:
                 self.gameplay.gameover = True
 
-
     def weapon_pos(self):
         x_offset = cos(self.degree*pi/180) * 50
         y_offset = -sin(self.degree*pi/180) * 50
@@ -207,7 +205,6 @@ class Enemies:
     def add(self, x, y, type, style):
         self.enemies.append(Enemy(x, y, type, style))
 
-
     def addInfo(self, gameplay, stopwatch, plane, bullets):
         self.gameplay = gameplay
         self.stopwatch = stopwatch
@@ -243,7 +240,7 @@ class Enemies:
     def check_user_col(self, plane):
         for enemy in self.enemies:
             if enemy.x <= plane.x + 100 and enemy.x >= plane.x and enemy.y >= plane.y - 20 and enemy.y <= plane.y + 70 and enemy.status == 'flying':
-                plane.lives -= 50
+                plane.lives -= plane.max_lives//2
                 plane.shake()
                 enemy.lives = 0
 
@@ -261,7 +258,7 @@ class Enemies:
     def slow_to_stop(self, x1, x2, cur, v0):
         dist = abs(x2-x1)
         travelled = abs(x1-cur)
-        if (dist - travelled) > 1:
+        if (dist - travelled) > 2:
             return v0 * (1 - (travelled / dist)) - 0.5
         else:
             return -0.5
@@ -306,8 +303,8 @@ class Enemies:
 
                 # HOVERING MOVING
                 elif enemy.style == 'hovering_moving':
-                    if enemy.x > display_width - 400 and enemy.movePhase == 0:
-                        if enemy.x < display_width - 50:
+                    if enemy.x > display_width - 200 and enemy.movePhase == 0:
+                        if enemy.x < display_width - 20:
                             enemy.dx = self.slow_to_stop(display_width-50, display_width-200, enemy.x, -4)
                         else:
                             enemy.dx = -4
@@ -394,16 +391,20 @@ class Enemy:
     def fire_control(self, stopwatch):
         if abs(self.shooting_start_time - stopwatch.sec) < Enemies.info(self.type, 'shooting_duration') and self.status!= "dead" and self.status != "wrecked":
             if self.style == "approaching_following":
-                self.fire_if_alligned()
+                self.fire_if_alligned_precisely()
             else:
-                self.fire()
+                self.fire_if_alligned()
         else:
             if abs(self.shooting_start_time - stopwatch.sec) > Enemies.info(self.type, 'shooting_duration') + Enemies.info(self.type, 'shooting_resttime'):
                 self.shooting_start_time = stopwatch.sec
 
 
-    def fire_if_alligned(self):
+    def fire_if_alligned_precisely(self):
         if abs(self.plane.y - self.y + 25) < 35:
+            self.fire()
+
+    def fire_if_alligned(self):
+        if abs(self.plane.y - self.y + 25) < 65:
             self.fire()
 
     def weapon_pos(self):
@@ -560,7 +561,6 @@ class Stopwatch:
     def reset(self):
         self.__init__()
 
-# All visible info. Like active weapon, score etc
 class Info:
 
     primary_img_active = pygame.image.load(ammo['bullet_1']['bullet_icon_active'])
@@ -691,9 +691,7 @@ class Gameplay:
 
     def checkAmmo(self, plane, bullets):
         if plane.primary_ammo + plane.secondary_ammo == 0 and bullets.active_user_bullets == 0:
-            return
-            # plane.primary_ammo += mat.arva()
-
+            plane.primary_ammo += mat.arva()
 
     def addInfo(self, enemies, plane, bonusBoxes, keyboard, info):
         self.enemies = enemies
@@ -704,7 +702,6 @@ class Gameplay:
 
     def check_if_game_over(self):
         return self.gameover
-
 
     def pause(self, keyboard, info):
         info.pause = True
@@ -768,5 +765,3 @@ class Gameplay:
 
     def reset(self):
         self.__init__()
-
-
