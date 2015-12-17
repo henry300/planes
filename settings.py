@@ -28,12 +28,28 @@ down_speed = 3
 left_speed = 3
 right_speed = 3
 
+########################################################################################
+
 # Ammo names and properties
 ammo = {
     'bullet_1' : {
         'speed' : 10,
         'damage': 10,
         'lag'   : 3,
+        'single': False,
+        'x_off' : 7,          # Distance between bullet and png edge horizontally
+        'y_off' : 17,         # Distance between bullet and png edge vertically
+        'bullet_image' : "images/bullet.png",
+        'bullet_icon_active'  : "images/primary_active.png",
+        'bullet_icon_unactive'  : "images/primary_unactive.png",
+        'bullet_icon_active_single' : "images/primary_active_single.png",
+        'bullet_icon_unactive_single' : "images/primary_unactive_single.png",
+
+    },
+    'bullet_1_enemy' : {
+        'speed' : 10,
+        'damage': 10,
+        'lag'   : 10,
         'single': False,
         'x_off' : 7,          # Distance between bullet and png edge horizontally
         'y_off' : 17,         # Distance between bullet and png edge vertically
@@ -57,6 +73,8 @@ ammo = {
     }
 }
 
+
+########################################################################################
 # Enemy names and properties
 enemy_info = {
     'blue_heli' : {
@@ -71,25 +89,29 @@ enemy_info = {
         'weapon_pos_y': 0,
         'ammo'  : None,
         'shooting_resttime' : 0,
+        'shooting_duration' : 0,
         'height' : 110,
         'value' : 50
     },
     'green_heli' : {
-        'max_lives' : 200,
+        'max_lives' : 170,
         'image' : "images/enemy2.png",
-        'wrecked_image' : "images/enemy2.png",
+        'wrecked_image' : "images/enemy2_wrecked.png",
         'x_off': 60,
         'y_off': 121,
         'lives_x_off': 25,
         'lives_y_off': 160,
         'weapon_pos_x': -10,
         'weapon_pos_y': 22,
-        'ammo'  : 'bullet_1',
-        'shooting_resttime' : 4,
+        'ammo'  : 'bullet_1_enemy',
+        'shooting_resttime' : 2,
+        'shooting_duration' : 2,
         'height' : 66,
-        'value' : 198
+        'value' : 100
     }
 }
+
+########################################################################################
 
 # Bonus boxes
 bonus_boxes_info = {
@@ -102,3 +124,4 @@ bonus_boxes_info = {
         'y_off': 70,
     }
 }
+########################################################################################

@@ -178,13 +178,24 @@ class Enemies:
         self.enemies = []
         self.attacking_count = len(self.enemies)
         self.screen = screen
+        self.plane = None
+        self.bullets = None
 
     def add(self, x, y, type, style):
         self.enemies.append(Enemy(x, y, type, style))
 
-    def addInfo(self, gameplay, stopwatch):
+
+    def addInfo(self, gameplay, stopwatch, plane, bullets):
         self.gameplay = gameplay
         self.stopwatch = stopwatch
+        self.plane = plane
+        self.bullets = bullets
+
+        # Provide additional info for enemies
+        for enemy in self.enemies:
+            enemy.plane = self.plane
+            enemy.bullets = self.bullets
+            enemy.stopwatch = self.stopwatch
 
     def blit(self):
         self.update_status()
@@ -194,10 +205,15 @@ class Enemies:
             self.screen.blit(enemy.image, (enemy.x - x_off, enemy.y - y_off))
             self.blit_lives(enemy)
 
+    def fire(self):
+        for enemy in self.enemies:
+            if enemy.ammo != None:
+                enemy.fire_control(self.stopwatch)
+
     def check_bullet_col(self, bullets):
         for enemy in self.enemies:
             for bullet in bullets.active_bullets:
-                if bullet.x >= enemy.x and bullet.y <= (enemy.y + enemy.height/2) and bullet.y >= (enemy.y - enemy.height/2) and enemy.status != 'wrecked':
+                if bullet.x >= enemy.x and bullet.y <= (enemy.y + enemy.height/2) and bullet.y >= (enemy.y - enemy.height/2) and enemy.status != 'wrecked' and bullet.origin.type == 'user':
                     enemy.lives -= bullet.damage
                     bullets.remove(bullet)
 
@@ -227,12 +243,15 @@ class Enemies:
         else:
             return -0.5
 
-    def calc_delta(self, plane):
+    def calc_delta(self):
+
+        active_following_enemies = 0
+
         for enemy in self.enemies:
 
             # IF ENEMY IS DEAD
             if enemy.status == 'dead':
-                if not enemy.y > (display_height - randint(70,90)):
+                if not enemy.y > (display_height - randint(55,80)):
                     enemy.dy = 8
                 else:
                     enemy.destroy(self.gameplay)
@@ -284,23 +303,22 @@ class Enemies:
                         enemy.dx = -2
 
                     # Follow plane y coordinate
-                    if abs(enemy.y - plane.y - 50) >= 20:
-                        if enemy.y - (plane.y + 50) < 0:
+                    if abs(enemy.y - self.plane.y - 25 - 130*active_following_enemies * -1) > enemy.lag:
+                        if enemy.y - (self.plane.y + 25 + 130*active_following_enemies * -1) < 0:
                             enemy.dy = 1
                         else:
                             enemy.dy = -1
                     else:
                         enemy.dy = 0
 
+                    active_following_enemies += 1
+
                 else:
                     print("No such moving style: ", enemy.style)
                     self.gameplay.gameover = True
 
-
-
-
-    def calc_pos(self, plane):
-        self.calc_delta(plane)
+    def calc_pos(self):
+        self.calc_delta()
 
         for enemy in self.enemies:
             enemy.x += enemy.dx
@@ -334,20 +352,46 @@ class Enemy:
         self.height = Enemies.info(type, 'height')
         self.status = 'flying'
         self.style = style
+        self.bullets = None
+        self.lag = randint(5,30)
         self.type = type
         self.value = Enemies.info(type, 'value')
         self.max_lives = Enemies.info(type, 'max_lives')
         self.lives = self.max_lives
         self.image = pygame.image.load(Enemies.info(type, 'image'))
         self.movePhase = 0
+        self.stopwatch = None
+        self.plane = None
+        self.shooting_start_time = 0
+        self.last_shot = 0
+
+    def fire_control(self, stopwatch):
+        if abs(self.shooting_start_time - stopwatch.sec) < Enemies.info(self.type, 'shooting_duration'):
+            if self.style == "approaching_following":
+                self.fire_if_alligned()
+            else:
+                self.fire()
+        else:
+            if abs(self.shooting_start_time - stopwatch.sec) > Enemies.info(self.type, 'shooting_duration') + Enemies.info(self.type, 'shooting_resttime'):
+                self.shooting_start_time = stopwatch.sec
+
+
+    def fire_if_alligned(self):
+        if abs(self.plane.y - self.y + 25) < 30:
+            self.fire()
 
     def weapon_pos(self):
         return self.x + self.weapon_pos_x, self.y + self.weapon_pos_y
 
-    def fire(self, bullets):
+    def fire(self):
         if self.ammo != None:
-            bullet = Bullet(self, self.ammo)
-            bullets.add(bullet)
+            time_since_shot = self.stopwatch.mill - self.last_shot
+
+            if time_since_shot >= Bullets.info(self.ammo, 'lag'):
+                bullet = Bullet(self, self.ammo)
+                self.bullets.add(bullet)
+                self.last_shot = self.stopwatch.mill
+
 
     def destroy(self, gameplay):
         self.status = 'wrecked'

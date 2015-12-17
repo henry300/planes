@@ -5,17 +5,24 @@ Tartu Ülikool 2015
 """
 
 """ TODO """
-# Seo mänguga mironi osa®
-# Shooting enemies
 # Bonus boxes
 # New weapon boxes
 # Much more moving styles
-# Show score
-# Show wave nr
 # Start screen
 # Possibility to start over
 # Bullet image degree calculation
 # Proper gameplay
+# Menus
+# Highscore
+# Make exe or atleast mac file from the project
+
+
+
+# KNOWN BUGS AND NEEDED FIXES
+
+#1  User and enemy collision - x coordinate is fixed and so collision point is wrong
+#2  Ammo variable name is not consistent
+
 """"""""""""
 
 from init import *
@@ -79,7 +86,7 @@ def game_loop():
         background.blit()
 
         """ INFO PANEL AND OTHER INFORMATION"""
-        info.blit(plane, stopwatch)
+        info.blit(plane, stopwatch, gameplay)
         """"""""""""""""""""""""
 
 
@@ -106,10 +113,11 @@ def game_loop():
 
 
         """ ENEMIES """
-        enemies.calc_pos(plane)
-        enemies.addInfo(gameplay, stopwatch)
+        enemies.calc_pos()
+        enemies.addInfo(gameplay, stopwatch, plane, bullets)
         enemies.check_bullet_col(bullets)
         enemies.check_user_col(plane)
+        enemies.fire()
         enemies.remove_offscreen()
         enemies.blit()
         """"""""""""""

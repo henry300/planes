@@ -22,6 +22,7 @@ enemies = Enemies(screen)
 bullets = Bullets(screen)
 stopwatch = Stopwatch()
 info = Info(screen)
+bonusBoxes = BonusBoxes(screen)
 gameplay = Gameplay()
 
 # Nuppude asendid
