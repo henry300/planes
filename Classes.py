@@ -392,7 +392,7 @@ class Enemy:
         self.last_shot = 0
 
     def fire_control(self, stopwatch):
-        if abs(self.shooting_start_time - stopwatch.sec) < Enemies.info(self.type, 'shooting_duration'):
+        if abs(self.shooting_start_time - stopwatch.sec) < Enemies.info(self.type, 'shooting_duration') and self.status!= "dead" and self.status != "wrecked":
             if self.style == "approaching_following":
                 self.fire_if_alligned()
             else:
