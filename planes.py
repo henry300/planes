@@ -144,7 +144,6 @@ def game_loop():
 
     ending_screen(gameplay.score)
 
-
 def game_intro():
 
     intro = True
@@ -162,7 +161,7 @@ def game_intro():
         screen.blit(TextSurf, TextRect)
 
         button("Play",display_width/2 - 125,190,250,50,(8,81,127),(16,110,170),game_loop)
-        button("Highscores",display_width/2 - 125,250,250,50,(8,81,127),(16,110,170),game_loop)
+        button("Highscores",display_width/2 - 125,250,250,50,(8,81,127),(16,110,170),highscores)
         button("Quit",display_width/2 - 125,310,250,50,(153,37,37),(185,48,48),exit)
         pygame.display.update()
         clock.tick(15)
@@ -170,6 +169,10 @@ def game_intro():
 def ending_screen(score):
 
     ending_screen = True
+
+    f = open("highscores.txt", "a")
+    f.write(str(score)+"\n")
+    f.close()
 
     while ending_screen:
         for event in pygame.event.get():
@@ -193,6 +196,43 @@ def ending_screen(score):
         pygame.display.update()
         clock.tick(15)
 
+def highscores():
+
+    highscores = True
+
+    lines = open("highscores.txt", "r", encoding="utf-8").read().splitlines()
+    print(lines)
+    scores = []
+    for line in lines:
+        scores.append(int(line))
+    scores = sorted(scores)[:-6:-1]
+
+    print(scores)
+
+    while highscores:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        screen.blit(pygame.image.load("images/background.png"), (0,0))
+        largeText = pygame.font.SysFont("comicsansms",115)
+        largeText2 = pygame.font.SysFont("comicsansms",60)
+
+        TextSurf, TextRect = text_objects("Highscores", largeText)
+
+        for nr, score in enumerate(scores):
+            TextSurf2, TextRect2 = text_objects(str(score), largeText2, (16,110,170))
+            TextRect2.center = ((display_width/2),(160 + int(nr)*45))
+            screen.blit(TextSurf2, TextRect2)
+
+
+        TextRect.center = ((display_width/2),(70))
+        screen.blit(TextSurf, TextRect)
+
+        button("Back",display_width/2 -75,380,150,50,(8,81,127),(16,110,170),game_intro)
+        pygame.display.update()
+        clock.tick(15)
 
 def exit():
     pygame.quit()
