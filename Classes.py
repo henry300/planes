@@ -15,8 +15,8 @@ class Plane:
         self.x = 50
         self.y = display_height / 2 - 100
         self.degree = 0
-        self.max_lives = 500
-        self.lives = 500
+        self.max_lives = 50
+        self.lives = 50
         self.last_shot_primary = 0
         self.last_shot_secondary = 0
         self.type = "user"
@@ -40,7 +40,6 @@ class Plane:
                 if bullet.x < self.x + 100 and abs(bullet.y - self.y - 44) < 35:
                     self.lives -= bullet.damage
                     bullets.remove(bullet)
-
 
     def swap_weapon(self):
         if self.active_weapon == self.primary_weapon:
@@ -86,43 +85,54 @@ class Plane:
         Info.secondary_img_unactive = pygame.image.load(ammo[name]['bullet_icon_unactive'])
 
     def calc_degree(self, kb):
-        degree = self.degree
-        up = kb.up
-        down = kb.down
+        if not self.lives <= 0:
+            degree = self.degree
+            up = kb.up
+            down = kb.down
 
-        if down:
-            if degree > -20:
-                degree -= 1
-            else:
-                degree = -20
-        if up:
-            if degree < 20:
-               degree += 1
-            else:
-               degree = 20
-        if (not up and not down) or (up and down):
-            if degree >= 2:
-                degree -= 2
-            elif degree <= -2:
-                degree += 2
-            else:
-                degree = 0
+            if down:
+                if degree > -20:
+                    degree -= 1
+                else:
+                    degree = -20
+            if up:
+                if degree < 20:
+                   degree += 1
+                else:
+                   degree = 20
+            if (not up and not down) or (up and down):
+                if degree >= 2:
+                    degree -= 2
+                elif degree <= -2:
+                    degree += 2
+                else:
+                    degree = 0
+        else:
+            degree = -20
+
         self.degree = degree
 
     def calc_pos(self, kb):
-        up = kb.up
-        down = kb.down
-        left = kb.left
-        right = kb.right
+        if not self.lives <= 0:
+            up = kb.up
+            down = kb.down
+            left = kb.left
+            right = kb.right
 
-        if up:
-            self.y -= up_speed
-        if down:
-            self.y += down_speed
-        if left:
-            self.x -= left_speed
-        if right:
-            self.x += right_speed
+            if up:
+                self.y -= up_speed
+            if down:
+                self.y += down_speed
+            if left:
+                self.x -= left_speed
+            if right:
+                self.x += right_speed
+        elif self.y < display_height - 90:
+            self.y += 8
+        else:
+            self.image_surf = pygame.image.load("images/plane_wrecked.png")
+            self.x -= bg_speed
+
 
     def weapon_pos(self):
         x_offset = cos(self.degree*pi/180) * 50
@@ -600,7 +610,12 @@ class Info:
         self.screen.blit(self.heart, (self.heart_x, self.heart_y))
 
     def blit_lives(self, plane):
-        textSurface = self.font.render(str(int((plane.lives / plane.max_lives) * 100)), True, white)
+        if plane.lives > 0:
+            lives = str(int((plane.lives / plane.max_lives) * 100))
+        else:
+            lives = "0"
+
+        textSurface = self.font.render(lives, True, white)
         textRect = textSurface.get_rect()
         textRect.center = (self.heart_x + 100 + textRect.width/2, self.heart_y + 55)
         self.screen.blit(textSurface, textRect)
@@ -678,11 +693,12 @@ class Gameplay:
         self.info = info
 
     def check_if_game_over(self):
-        if self.plane.lives <= 0:
-            self.gameover_reason = "You got destroyed!"
-            self.gameover = True
-
-        return self.gameover
+        # if self.plane.lives <= 0:
+        #     self.gameover_reason = "You got destroyed!"
+        #     self.gameover = True
+        #
+        # return self.gameover
+        return False
 
 
     def pause(self, keyboard, info):
