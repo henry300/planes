@@ -15,7 +15,8 @@ class Plane:
         self.x = 50
         self.y = display_height / 2 - 100
         self.degree = 0
-        self.lives = 100
+        self.max_lives = 500
+        self.lives = 500
         self.last_shot_primary = 0
         self.last_shot_secondary = 0
         self.type = "user"
@@ -32,6 +33,14 @@ class Plane:
 
     def addInfo(self, stopwatch):
         self.time = stopwatch.sec
+
+    def check_bullet_col(self, bullets):
+        for bullet in bullets.active_bullets:
+            if bullet.origin != self:
+                if bullet.x < self.x + 100 and abs(bullet.y - self.y - 44) < 35:
+                    self.lives -= bullet.damage
+                    bullets.remove(bullet)
+
 
     def swap_weapon(self):
         if self.active_weapon == self.primary_weapon:
@@ -377,7 +386,7 @@ class Enemy:
 
 
     def fire_if_alligned(self):
-        if abs(self.plane.y - self.y + 25) < 30:
+        if abs(self.plane.y - self.y + 25) < 35:
             self.fire()
 
     def weapon_pos(self):
@@ -591,7 +600,7 @@ class Info:
         self.screen.blit(self.heart, (self.heart_x, self.heart_y))
 
     def blit_lives(self, plane):
-        textSurface = self.font.render(str(plane.lives), True, white)
+        textSurface = self.font.render(str(int((plane.lives / plane.max_lives) * 100)), True, white)
         textRect = textSurface.get_rect()
         textRect.center = (self.heart_x + 100 + textRect.width/2, self.heart_y + 55)
         self.screen.blit(textSurface, textRect)
