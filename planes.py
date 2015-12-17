@@ -17,7 +17,7 @@ Tartu Ülikool 2015
 # LINE COUNT 1556
 #1  User and enemy collision - x coordinate is fixed and so collision point is wrong
 #2  Ammo variable name is not consistent
-
+][{}]
 """"""""""""
 
 from init import *
